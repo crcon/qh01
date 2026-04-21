@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>易储能源 | 青海省独立储能专栏</title>
+<meta name="description" content="易储能源 · 青海省海西300MW/1200MWh独立储能电站投资与收益分析专栏，含可调参数实时测算器。" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --ys-primary:#0b6e4f;
+    --ys-primary-dark:#064b37;
+    --ys-accent:#f5b301;
+    --ys-ink:#0f172a;
+  }
+  html{scroll-behavior:smooth;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Helvetica,Arial,sans-serif;color:var(--ys-ink);}
+  .brand-gradient{background:linear-gradient(135deg,#064b37 0%,#0b6e4f 45%,#13a474 100%);}
+  .hero-pattern{background-image:
+    radial-gradient(circle at 20% 20%, rgba(245,179,1,.18) 0, transparent 40%),
+    radial-gradient(circle at 80% 30%, rgba(19,164,116,.28) 0, transparent 45%),
+    linear-gradient(135deg,#052e21 0%,#0b6e4f 50%,#0f8f66 100%);
+  }
+  .card{background:#fff;border-radius:16px;box-shadow:0 1px 2px rgba(15,23,42,.06),0 8px 24px -12px rgba(15,23,42,.12);}
+  .chip{display:inline-flex;align-items:center;gap:.35rem;padding:.25rem .6rem;border-radius:9999px;font-size:.72rem;font-weight:600;}
+  .num{font-variant-numeric:tabular-nums;}
+  input[type="range"]{-webkit-appearance:none;appearance:none;height:4px;background:#e2e8f0;border-radius:9999px;outline:none;}
+  input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:9999px;background:var(--ys-primary);border:2px solid #fff;box-shadow:0 0 0 1px var(--ys-primary);cursor:pointer;}
+  input[type="range"]::-moz-range-thumb{width:18px;height:18px;border-radius:9999px;background:var(--ys-primary);border:2px solid #fff;cursor:pointer;}
+  .param-row{display:grid;grid-template-columns:1fr auto;gap:.25rem .75rem;align-items:center;}
+  details>summary{list-style:none;cursor:pointer;}
+  details>summary::-webkit-details-marker{display:none;}
+  .kpi{background:linear-gradient(135deg,#ffffff 0%,#f1f5f9 100%);}
+  .divider-label{display:flex;align-items:center;gap:.75rem;color:#475569;font-weight:600;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;margin:1rem 0 .5rem;}
+  .divider-label::before,.divider-label::after{content:"";flex:1;height:1px;background:#e2e8f0;}
+  .tag-good{background:#dcfce7;color:#166534;}
+  .tag-warn{background:#fef3c7;color:#92400e;}
+  .tag-bad{background:#fee2e2;color:#991b1b;}
+  .tag-info{background:#dbeafe;color:#1e40af;}
+  .scroll-shadow{background:
+    linear-gradient(#fff 30%,rgba(255,255,255,0)),
+    linear-gradient(rgba(255,255,255,0),#fff 70%) 0 100%,
+    radial-gradient(farthest-side at 50% 0, rgba(15,23,42,.12), transparent),
+    radial-gradient(farthest-side at 50% 100%, rgba(15,23,42,.12), transparent) 0 100%;
+    background-repeat:no-repeat;background-size:100% 40px,100% 40px,100% 10px,100% 10px;background-attachment:local,local,scroll,scroll;}
+</style>
+</head>
+<body class="bg-slate-50">
+
+<!-- ============ 顶部导航 ============ -->
+<header class="sticky top-0 z-40 bg-white/85 backdrop-blur border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-2">
+      <span class="w-9 h-9 rounded-xl brand-gradient flex items-center justify-center text-white font-bold">易</span>
+      <span class="flex flex-col leading-tight">
+        <span class="font-bold text-slate-900">易储能源</span>
+        <span class="text-[11px] text-slate-500">青海省独立储能专栏</span>
+      </span>
+    </a>
+    <nav class="hidden md:flex items-center gap-7 text-sm text-slate-600">
+      <a href="#project" class="hover:text-emerald-700">项目概况</a>
+      <a href="#returns" class="hover:text-emerald-700">投资与收益</a>
+      <a href="#calculator" class="hover:text-emerald-700">收益测算器</a>
+      <a href="#policy" class="hover:text-emerald-700">政策依据</a>
+      <a href="#risk" class="hover:text-emerald-700">风险与建议</a>
+    </nav>
+    <a href="#calculator" class="text-sm bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-lg font-medium">立即测算</a>
+  </div>
+</header>
+
+<!-- ============ Hero ============ -->
+<section id="top" class="hero-pattern text-white">
+  <div class="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
+    <div class="flex flex-wrap items-center gap-2 mb-5">
+      <span class="chip bg-white/15 text-white border border-white/20">青海 · 海西州</span>
+      <span class="chip bg-amber-400/20 text-amber-200 border border-amber-300/30">300 MW / 1,200 MWh</span>
+      <span class="chip bg-emerald-400/20 text-emerald-100 border border-emerald-300/30">电网侧独立储能</span>
+    </div>
+    <h1 class="text-3xl md:text-5xl font-bold tracking-tight leading-tight">
+      青海省海西 300MW/1200MWh<br />独立储能电站 · 投资与收益分析
+    </h1>
+    <p class="mt-5 max-w-2xl text-white/80 md:text-lg">
+      依据《青海发电侧容量电价机制（征求意见稿）》《青海电力现货市场规则 V6.0》《西北监能市场〔2025〕48号》等最新政策，
+      构建现货套利、容量补偿、容量租赁、辅助服务、调用补偿五位一体的收益测算模型。
+    </p>
+    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
+      <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/15">
+        <div class="text-xs text-white/70">项目总投资</div>
+        <div class="text-2xl md:text-3xl font-bold num">14.4<span class="text-base font-medium ml-1">亿元</span></div>
+        <div class="text-[11px] text-white/60 mt-1">综合单价 1,200 元/kWh</div>
+      </div>
+      <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/15">
+        <div class="text-xs text-white/70">中性情景年收入</div>
+        <div class="text-2xl md:text-3xl font-bold num">1.90<span class="text-base font-medium ml-1">亿元</span></div>
+        <div class="text-[11px] text-white/60 mt-1">现货+容量+租赁+辅助</div>
+      </div>
+      <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/15">
+        <div class="text-xs text-white/70">容量补偿（2026）</div>
+        <div class="text-2xl md:text-3xl font-bold num">165<span class="text-base font-medium ml-1">元/kW·年</span></div>
+        <div class="text-[11px] text-white/60 mt-1">年补偿约 4,613 万元</div>
+      </div>
+      <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/15">
+        <div class="text-xs text-white/70">现货价差（青海）</div>
+        <div class="text-2xl md:text-3xl font-bold num">0.57<span class="text-base font-medium ml-1">元/kWh</span></div>
+        <div class="text-[11px] text-white/60 mt-1">2025年9月发改委数据</div>
+      </div>
+    </div>
+    <div class="mt-10 flex flex-wrap gap-3">
+      <a href="#returns" class="bg-white text-emerald-800 hover:bg-amber-100 font-semibold px-5 py-2.5 rounded-lg">查看项目收益</a>
+      <a href="#calculator" class="bg-amber-400 hover:bg-amber-300 text-slate-900 font-semibold px-5 py-2.5 rounded-lg">进入测算器 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 项目概况 ============ -->
+<section id="project" class="max-w-7xl mx-auto px-4 md:px-6 py-16">
+  <div class="flex items-end justify-between mb-8 flex-wrap gap-3">
+    <div>
+      <div class="text-xs text-emerald-700 font-semibold tracking-widest">01 · PROJECT OVERVIEW</div>
+      <h2 class="text-2xl md:text-3xl font-bold mt-1">项目概况</h2>
+    </div>
+    <div class="text-sm text-slate-500">报告日期：2026-04-22</div>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-5">
+    <div class="card p-6 md:col-span-2">
+      <h3 class="font-semibold text-slate-900 mb-4">基本参数</h3>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+        <div><div class="text-slate-500 text-xs">装机功率</div><div class="font-semibold num text-lg">300 MW</div></div>
+        <div><div class="text-slate-500 text-xs">储能容量</div><div class="font-semibold num text-lg">1,200 MWh</div></div>
+        <div><div class="text-slate-500 text-xs">储能时长</div><div class="font-semibold num text-lg">4 小时</div></div>
+        <div><div class="text-slate-500 text-xs">技术类型</div><div class="font-semibold text-lg">磷酸铁锂</div></div>
+        <div><div class="text-slate-500 text-xs">项目类型</div><div class="font-semibold text-lg">电网侧独立储能</div></div>
+        <div><div class="text-slate-500 text-xs">所属地区</div><div class="font-semibold text-lg">青海海西州</div></div>
+      </div>
+      <p class="text-sm text-slate-600 mt-5 leading-relaxed">
+        海西州是青海省新能源资源最富集区域之一，拥有大规模光伏与风电基地。4 小时长时储能能够有效匹配当地新能源发电特性，
+        日间光伏大发时段充电、晚间高峰时段放电，实现削峰填谷，并参与电力现货市场连续结算。
+      </p>
+    </div>
+    <div class="card p-6 kpi">
+      <h3 class="font-semibold text-slate-900 mb-4">融资结构</h3>
+      <ul class="text-sm space-y-2.5">
+        <li class="flex justify-between"><span class="text-slate-600">资本金比例</span><span class="font-semibold num">30%</span></li>
+        <li class="flex justify-between"><span class="text-slate-600">贷款比例</span><span class="font-semibold num">70%</span></li>
+        <li class="flex justify-between"><span class="text-slate-600">贷款金额</span><span class="font-semibold num">10.08 亿元</span></li>
+        <li class="flex justify-between"><span class="text-slate-600">贷款利率</span><span class="font-semibold num">3.50% (LPR−50bp)</span></li>
+        <li class="flex justify-between border-t pt-2 mt-2"><span class="text-slate-600">年财务费用</span><span class="font-semibold num text-emerald-700">3,528 万元</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 投资与收益展示 ============ -->
+<section id="returns" class="bg-white border-y border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 md:px-6 py-16">
+    <div class="mb-8">
+      <div class="text-xs text-emerald-700 font-semibold tracking-widest">02 · INVESTMENT & RETURNS</div>
+      <h2 class="text-2xl md:text-3xl font-bold mt-1">投资构成与三情景收益</h2>
+      <p class="text-slate-600 mt-2">按投资估算表同比例放大至 1,200 MWh，总投资 14.4 亿元；年收益由五大来源构成。</p>
+    </div>
+
+    <!-- 投资构成 -->
+    <div class="grid lg:grid-cols-5 gap-5">
+      <div class="card p-6 lg:col-span-3">
+        <h3 class="font-semibold text-slate-900 mb-4">投资构成（14.4 亿元）</h3>
+        <div class="overflow-x-auto scroll-shadow">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-slate-500 border-b">
+                <th class="py-2 pr-3 font-medium">投资项</th>
+                <th class="py-2 pr-3 font-medium text-right">金额（万元）</th>
+                <th class="py-2 pr-3 font-medium text-right">单价（元/kWh）</th>
+                <th class="py-2 font-medium text-right">占比</th>
+              </tr>
+            </thead>
+            <tbody class="num">
+              <tr class="border-b"><td class="py-2 pr-3">储能电池系统</td><td class="text-right pr-3">60,000</td><td class="text-right pr-3">500</td><td class="text-right">41.7%</td></tr>
+              <tr class="border-b"><td class="py-2 pr-3">PCS 及电池舱</td><td class="text-right pr-3">12,000</td><td class="text-right pr-3">100</td><td class="text-right">8.3%</td></tr>
+              <tr class="border-b"><td class="py-2 pr-3">升压站、GIS 及土建（EPC）</td><td class="text-right pr-3">42,000</td><td class="text-right pr-3">350</td><td class="text-right">29.2%</td></tr>
+              <tr class="border-b"><td class="py-2 pr-3">土地征用及清理</td><td class="text-right pr-3">6,380</td><td class="text-right pr-3">53.2</td><td class="text-right">4.4%</td></tr>
+              <tr class="border-b"><td class="py-2 pr-3">工程建设其他费用</td><td class="text-right pr-3">14,820</td><td class="text-right pr-3">123.5</td><td class="text-right">10.3%</td></tr>
+              <tr class="border-b"><td class="py-2 pr-3">基本预备费</td><td class="text-right pr-3">7,792</td><td class="text-right pr-3">64.9</td><td class="text-right">5.4%</td></tr>
+              <tr class="border-b"><td class="py-2 pr-3">建设期利息</td><td class="text-right pr-3">1,008</td><td class="text-right pr-3">8.4</td><td class="text-right">0.7%</td></tr>
+              <tr class="font-semibold bg-emerald-50"><td class="py-2 pr-3">项目建设总投资</td><td class="text-right pr-3">144,000</td><td class="text-right pr-3">1,200</td><td class="text-right">100%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card p-6 lg:col-span-2">
+        <h3 class="font-semibold text-slate-900 mb-4">投资构成占比</h3>
+        <canvas id="investChart" height="240"></canvas>
+      </div>
+    </div>
+
+    <!-- 三情景收益对比 -->
+    <div class="mt-8 grid lg:grid-cols-5 gap-5">
+      <div class="card p-6 lg:col-span-2">
+        <h3 class="font-semibold text-slate-900 mb-4">三情景年度收益对比（万元）</h3>
+        <canvas id="scenarioChart" height="260"></canvas>
+      </div>
+      <div class="card p-6 lg:col-span-3">
+        <h3 class="font-semibold text-slate-900 mb-4">五大收益来源 · 中性情景</h3>
+        <div class="space-y-3 text-sm">
+          <div>
+            <div class="flex justify-between mb-1"><span class="font-medium">现货价差套利</span><span class="num font-semibold">11,200 万元 · 59%</span></div>
+            <div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-emerald-600" style="width:59%"></div></div>
+            <p class="text-xs text-slate-500 mt-1">放电 877,200 kWh/日 × 价差 0.50 元/kWh × 330 天</p>
+          </div>
+          <div>
+            <div class="flex justify-between mb-1"><span class="font-medium">容量补偿</span><span class="num font-semibold">4,613 万元 · 24%</span></div>
+            <div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-amber-500" style="width:24%"></div></div>
+            <p class="text-xs text-slate-500 mt-1">有效容量 268,830 kW × 165 元 × 供需系数 1.04</p>
+          </div>
+          <div>
+            <div class="flex justify-between mb-1"><span class="font-medium">容量租赁</span><span class="num font-semibold">2,400 万元 · 13%</span></div>
+            <div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sky-500" style="width:13%"></div></div>
+            <p class="text-xs text-slate-500 mt-1">200 元/kW·年 × 出租率 70%</p>
+          </div>
+          <div>
+            <div class="flex justify-between mb-1"><span class="font-medium">辅助服务</span><span class="num font-semibold">400 万元 · 2%</span></div>
+            <div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-violet-500" style="width:2%"></div></div>
+            <p class="text-xs text-slate-500 mt-1">调峰价 0.3247 元/kWh × 年调用 200 小时</p>
+          </div>
+          <div>
+            <div class="flex justify-between mb-1"><span class="font-medium">调用补偿/其他补贴</span><span class="num font-semibold">400 万元 · 2%</span></div>
+            <div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-rose-500" style="width:2%"></div></div>
+            <p class="text-xs text-slate-500 mt-1">现货二次优化运行成本补偿</p>
+          </div>
+          <div class="flex justify-between border-t pt-3 mt-3">
+            <span class="font-semibold">年总收入合计</span>
+            <span class="num font-bold text-emerald-700 text-lg">19,013 万元</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 三情景核心指标 -->
+    <div class="mt-8">
+      <div class="divider-label">三情景核心财务指标（20 年运营期）</div>
+      <div class="grid md:grid-cols-3 gap-5">
+        <div class="card p-6 border-t-4 border-rose-400">
+          <div class="flex items-center justify-between">
+            <h4 class="font-semibold">保守情景</h4><span class="chip tag-bad">不建议投资</span>
+          </div>
+          <dl class="mt-4 text-sm space-y-2 num">
+            <div class="flex justify-between"><dt class="text-slate-500">年总收入</dt><dd class="font-semibold">14,513 万元</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">年 EBITDA</dt><dd class="font-semibold">11,666 万元</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">IRR</dt><dd class="font-semibold text-rose-600">−3.16%</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">NPV(8%)</dt><dd class="font-semibold text-rose-600">−8.76 亿元</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">静态回收期</dt><dd class="font-semibold">&gt; 20 年</dd></div>
+          </dl>
+        </div>
+        <div class="card p-6 border-t-4 border-amber-400">
+          <div class="flex items-center justify-between">
+            <h4 class="font-semibold">中性情景</h4><span class="chip tag-warn">经济性不足</span>
+          </div>
+          <dl class="mt-4 text-sm space-y-2 num">
+            <div class="flex justify-between"><dt class="text-slate-500">年总收入</dt><dd class="font-semibold">19,013 万元</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">年 EBITDA</dt><dd class="font-semibold">16,166 万元</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">IRR</dt><dd class="font-semibold text-amber-600">2.31%</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">NPV(8%)</dt><dd class="font-semibold text-amber-600">−5.00 亿元</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">静态回收期</dt><dd class="font-semibold">17.08 年</dd></div>
+          </dl>
+        </div>
+        <div class="card p-6 border-t-4 border-emerald-500">
+          <div class="flex items-center justify-between">
+            <h4 class="font-semibold">乐观情景</h4><span class="chip tag-good">审慎可行</span>
+          </div>
+          <dl class="mt-4 text-sm space-y-2 num">
+            <div class="flex justify-between"><dt class="text-slate-500">年总收入</dt><dd class="font-semibold">24,113 万元</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">年 EBITDA</dt><dd class="font-semibold">21,266 万元</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">IRR</dt><dd class="font-semibold text-emerald-700">7.02%</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">NPV(8%)</dt><dd class="font-semibold text-emerald-700">−0.93 亿元</dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">静态回收期</dt><dd class="font-semibold">8.78 年</dd></div>
+          </dl>
+        </div>
+      </div>
+      <p class="text-xs text-slate-500 mt-4">
+        说明：已考虑"三免三减半"税收优惠、前 3 年产能爬坡（80%/90%/100%）、第 12 年电池更换（6 亿元）等因素；折现率 8%。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 可调参数测算器 ============ -->
+<section id="calculator" class="max-w-7xl mx-auto px-4 md:px-6 py-16">
+  <div class="mb-8 flex flex-wrap items-end justify-between gap-3">
+    <div>
+      <div class="text-xs text-emerald-700 font-semibold tracking-widest">03 · INTERACTIVE CALCULATOR</div>
+      <h2 class="text-2xl md:text-3xl font-bold mt-1">青海省独立储能 · 投资与收益实时测算</h2>
+      <p class="text-slate-600 mt-2 max-w-3xl">
+        基于青海电力现货规则、发电侧容量电价机制、西北辅助服务规则与 136 号文构建收益勾稽关系。
+        系统参数与政策参数均可调，右侧实时展示项目总收益与分项收益及财务指标。
+      </p>
+    </div>
+    <div class="flex gap-2">
+      <button id="presetConservative" class="text-xs px-3 py-1.5 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200">保守情景</button>
+      <button id="presetNeutral" class="text-xs px-3 py-1.5 rounded-lg bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200">中性情景</button>
+      <button id="presetOptimistic" class="text-xs px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200">乐观情景</button>
+      <button id="presetReset" class="text-xs px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">重置</button>
+    </div>
+  </div>
+
+  <div class="grid lg:grid-cols-12 gap-6">
+    <!-- 参数面板 -->
+    <div class="lg:col-span-5 space-y-5">
+
+      <!-- 系统参数 -->
+      <div class="card p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-semibold">系统参数</h3>
+          <span class="chip tag-info">可调</span>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <div class="param-row"><label class="text-sm">装机功率 <span class="text-slate-400 text-xs">MW</span></label>
+              <input type="number" id="power" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="10" max="1000" step="10" value="300"></div>
+            <input type="range" id="powerR" min="10" max="1000" step="10" value="300" class="w-full mt-1">
+          </div>
+          <div>
+            <div class="param-row"><label class="text-sm">储能时长 <span class="text-slate-400 text-xs">小时</span></label>
+              <input type="number" id="duration" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="1" max="8" step="0.5" value="4"></div>
+            <input type="range" id="durationR" min="1" max="8" step="0.5" value="4" class="w-full mt-1">
+          </div>
+          <div>
+            <div class="param-row"><label class="text-sm">综合投资单价 <span class="text-slate-400 text-xs">元/kWh</span></label>
+              <input type="number" id="capex" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="500" max="2000" step="10" value="1200"></div>
+            <input type="range" id="capexR" min="500" max="2000" step="10" value="1200" class="w-full mt-1">
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <div class="param-row"><label class="text-sm">往返效率 <span class="text-slate-400 text-xs">%</span></label>
+                <input type="number" id="rte" class="w-20 text-right border rounded-md px-2 py-1 text-sm num" min="70" max="95" step="0.5" value="86"></div>
+              <input type="range" id="rteR" min="70" max="95" step="0.5" value="86" class="w-full mt-1">
+            </div>
+            <div>
+              <div class="param-row"><label class="text-sm">可用率 <span class="text-slate-400 text-xs">%</span></label>
+                <input type="number" id="avail" class="w-20 text-right border rounded-md px-2 py-1 text-sm num" min="60" max="100" step="1" value="85"></div>
+              <input type="range" id="availR" min="60" max="100" step="1" value="85" class="w-full mt-1">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <div class="param-row"><label class="text-sm">日循环次数</label>
+                <input type="number" id="cycles" class="w-20 text-right border rounded-md px-2 py-1 text-sm num" min="0.5" max="2" step="0.1" value="1"></div>
+              <input type="range" id="cyclesR" min="0.5" max="2" step="0.1" value="1" class="w-full mt-1">
+            </div>
+            <div>
+              <div class="param-row"><label class="text-sm">年运行天数</label>
+                <input type="number" id="days" class="w-20 text-right border rounded-md px-2 py-1 text-sm num" min="300" max="365" step="1" value="330"></div>
+              <input type="range" id="daysR" min="300" max="365" step="1" value="330" class="w-full mt-1">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <div class="param-row"><label class="text-sm">厂用电率 <span class="text-slate-400 text-xs">%</span></label>
+                <input type="number" id="aux" class="w-20 text-right border rounded-md px-2 py-1 text-sm num" min="0" max="20" step="0.1" value="10.39"></div>
+              <input type="range" id="auxR" min="0" max="20" step="0.1" value="10.39" class="w-full mt-1">
+            </div>
+            <div>
+              <div class="param-row"><label class="text-sm">资本金比例 <span class="text-slate-400 text-xs">%</span></label>
+                <input type="number" id="equity" class="w-20 text-right border rounded-md px-2 py-1 text-sm num" min="20" max="100" step="1" value="30"></div>
+              <input type="range" id="equityR" min="20" max="100" step="1" value="30" class="w-full mt-1">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <div class="param-row"><label class="text-sm">贷款利率 <span class="text-slate-400 text-xs">%</span></label>
+                <input type="number" id="rate" class="w-20 text-right border rounded-md px-2 py-1 text-sm num" min="1.5" max="6" step="0.05" value="3.5"></div>
+              <input type="range" id="rateR" min="1.5" max="6" step="0.05" value="3.5" class="w-full mt-1">
+            </div>
+            <div>
+              <div class="param-row"><label class="text-sm">运营期 <span class="text-slate-400 text-xs">年</span></label>
+                <input type="number" id="life" class="w-20 text-right border rounded-md px-2 py-1 text-sm num" min="10" max="25" step="1" value="20"></div>
+              <input type="range" id="lifeR" min="10" max="25" step="1" value="20" class="w-full mt-1">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 政策 / 市场参数 -->
+      <div class="card p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-semibold">政策与市场参数</h3>
+          <span class="chip tag-info">可调</span>
+        </div>
+
+        <details open class="border-b pb-3 mb-3">
+          <summary class="flex justify-between text-sm font-medium mb-3">
+            <span>① 现货价差套利</span><span class="text-slate-400">展开/收起</span>
+          </summary>
+          <div class="space-y-3">
+            <div>
+              <div class="param-row"><label class="text-sm">现货价差 <span class="text-slate-400 text-xs">元/kWh</span></label>
+                <input type="number" id="spread" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="0.1" max="1.2" step="0.01" value="0.50"></div>
+              <input type="range" id="spreadR" min="0.1" max="1.2" step="0.01" value="0.50" class="w-full mt-1">
+              <p class="text-[11px] text-slate-500 mt-1">青海上限 0.65、二级限价 0.30、下限 0.08 元/kWh；2025-09 实际约 0.57 元/kWh。</p>
+            </div>
+            <div>
+              <div class="param-row"><label class="text-sm">市场化参与比例 <span class="text-slate-400 text-xs">%</span></label>
+                <input type="number" id="spotRatio" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="0" max="100" step="5" value="100"></div>
+              <input type="range" id="spotRatioR" min="0" max="100" step="5" value="100" class="w-full mt-1">
+            </div>
+          </div>
+        </details>
+
+        <details open class="border-b pb-3 mb-3">
+          <summary class="flex justify-between text-sm font-medium mb-3">
+            <span>② 发电侧容量电价</span><span class="text-slate-400">展开/收起</span>
+          </summary>
+          <div class="space-y-3">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <div class="param-row"><label class="text-sm">补偿标准 <span class="text-slate-400 text-xs">元/kW·年</span></label>
+                  <input type="number" id="capPrice" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="0" max="400" step="1" value="165"></div>
+                <input type="range" id="capPriceR" min="0" max="400" step="1" value="165" class="w-full mt-1">
+              </div>
+              <div>
+                <div class="param-row"><label class="text-sm">供需系数</label>
+                  <input type="number" id="capCoef" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="0.8" max="1.2" step="0.01" value="1.04"></div>
+                <input type="range" id="capCoefR" min="0.8" max="1.2" step="0.01" value="1.04" class="w-full mt-1">
+              </div>
+            </div>
+            <div>
+              <div class="param-row"><label class="text-sm">可靠容量系数 <span class="text-slate-400 text-xs">%</span></label>
+                <input type="number" id="relCoef" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="0" max="100" step="1" value="100"></div>
+              <input type="range" id="relCoefR" min="0" max="100" step="1" value="100" class="w-full mt-1">
+              <p class="text-[11px] text-slate-500 mt-1">= MIN( 放电时长 / 净负荷高峰时长, 100% )，净负荷高峰默认 4 小时。</p>
+            </div>
+          </div>
+        </details>
+
+        <details class="border-b pb-3 mb-3">
+          <summary class="flex justify-between text-sm font-medium mb-3">
+            <span>③ 容量租赁</span><span class="text-slate-400">展开/收起</span>
+          </summary>
+          <div class="space-y-3">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <div class="param-row"><label class="text-sm">租赁价 <span class="text-slate-400 text-xs">元/kW·年</span></label>
+                  <input type="number" id="leasePrice" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="0" max="400" step="5" value="200"></div>
+                <input type="range" id="leasePriceR" min="0" max="400" step="5" value="200" class="w-full mt-1">
+              </div>
+              <div>
+                <div class="param-row"><label class="text-sm">出租率 <span class="text-slate-400 text-xs">%</span></label>
+                  <input type="number" id="leaseRate" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="0" max="100" step="1" value="70"></div>
+                <input type="range" id="leaseRateR" min="0" max="100" step="1" value="70" class="w-full mt-1">
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-500">136 号文取消强制配储后，容量租赁需求承压。2024 年市场均价已降至 67.8 元/kWh·年。</p>
+          </div>
+        </details>
+
+        <details class="border-b pb-3 mb-3">
+          <summary class="flex justify-between text-sm font-medium mb-3">
+            <span>④ 辅助服务</span><span class="text-slate-400">展开/收起</span>
+          </summary>
+          <div class="space-y-3 grid grid-cols-2 gap-3">
+            <div>
+              <div class="param-row"><label class="text-sm">调峰价 <span class="text-slate-400 text-xs">元/kWh</span></label>
+                <input type="number" id="asPrice" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="0" max="1" step="0.01" value="0.3247"></div>
+              <input type="range" id="asPriceR" min="0" max="1" step="0.01" value="0.3247" class="w-full mt-1">
+            </div>
+            <div>
+              <div class="param-row"><label class="text-sm">年调用 <span class="text-slate-400 text-xs">小时</span></label>
+                <input type="number" id="asHours" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="0" max="1500" step="10" value="200"></div>
+              <input type="range" id="asHoursR" min="0" max="1500" step="10" value="200" class="w-full mt-1">
+            </div>
+          </div>
+        </details>
+
+        <details>
+          <summary class="flex justify-between text-sm font-medium mb-3">
+            <span>⑤ 其他补贴 / 调用补偿</span><span class="text-slate-400">展开/收起</span>
+          </summary>
+          <div class="space-y-3">
+            <div>
+              <div class="param-row"><label class="text-sm">年其他补贴 <span class="text-slate-400 text-xs">万元/年</span></label>
+                <input type="number" id="subsidy" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="0" max="5000" step="50" value="400"></div>
+              <input type="range" id="subsidyR" min="0" max="5000" step="50" value="400" class="w-full mt-1">
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- 成本参数 -->
+      <div class="card p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-semibold">运营成本参数</h3>
+          <span class="chip tag-info">可调</span>
+        </div>
+        <div class="space-y-3">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <div class="param-row"><label class="text-sm">运维费率 <span class="text-slate-400 text-xs">% 投资</span></label>
+                <input type="number" id="omRate" class="w-20 text-right border rounded-md px-2 py-1 text-sm num" min="0.3" max="3" step="0.1" value="0.8"></div>
+              <input type="range" id="omRateR" min="0.3" max="3" step="0.1" value="0.8" class="w-full mt-1">
+            </div>
+            <div>
+              <div class="param-row"><label class="text-sm">站用电 <span class="text-slate-400 text-xs">% 投资</span></label>
+                <input type="number" id="stationE" class="w-20 text-right border rounded-md px-2 py-1 text-sm num" min="0" max="1" step="0.05" value="0.3"></div>
+              <input type="range" id="stationER" min="0" max="1" step="0.05" value="0.3" class="w-full mt-1">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <div class="param-row"><label class="text-sm">人员数 <span class="text-slate-400 text-xs">人</span></label>
+                <input type="number" id="staff" class="w-20 text-right border rounded-md px-2 py-1 text-sm num" min="5" max="60" step="1" value="25"></div>
+              <input type="range" id="staffR" min="5" max="60" step="1" value="25" class="w-full mt-1">
+            </div>
+            <div>
+              <div class="param-row"><label class="text-sm">人均薪酬 <span class="text-slate-400 text-xs">万元</span></label>
+                <input type="number" id="salary" class="w-20 text-right border rounded-md px-2 py-1 text-sm num" min="8" max="40" step="1" value="15"></div>
+              <input type="range" id="salaryR" min="8" max="40" step="1" value="15" class="w-full mt-1">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <div class="param-row"><label class="text-sm">保险费率 <span class="text-slate-400 text-xs">% 投资</span></label>
+                <input type="number" id="insRate" class="w-20 text-right border rounded-md px-2 py-1 text-sm num" min="0" max="1" step="0.05" value="0.2"></div>
+              <input type="range" id="insRateR" min="0" max="1" step="0.05" value="0.2" class="w-full mt-1">
+            </div>
+            <div>
+              <div class="param-row"><label class="text-sm">其他费用 <span class="text-slate-400 text-xs">万元/年</span></label>
+                <input type="number" id="other" class="w-20 text-right border rounded-md px-2 py-1 text-sm num" min="0" max="3000" step="50" value="600"></div>
+              <input type="range" id="otherR" min="0" max="3000" step="50" value="600" class="w-full mt-1">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 结果面板 -->
+    <div class="lg:col-span-7 space-y-5">
+
+      <!-- KPI -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="card p-4 kpi">
+          <div class="text-xs text-slate-500">项目总投资</div>
+          <div class="text-xl md:text-2xl font-bold num mt-1" id="kpiCapex">14.40 亿</div>
+          <div class="text-[11px] text-slate-500 mt-0.5" id="kpiCapexSub">1,200 元/kWh</div>
+        </div>
+        <div class="card p-4 kpi">
+          <div class="text-xs text-slate-500">年总收入</div>
+          <div class="text-xl md:text-2xl font-bold num mt-1 text-emerald-700" id="kpiRevenue">1.90 亿</div>
+          <div class="text-[11px] text-slate-500 mt-0.5" id="kpiRevenueSub">五项合计</div>
+        </div>
+        <div class="card p-4 kpi">
+          <div class="text-xs text-slate-500">项目 IRR</div>
+          <div class="text-xl md:text-2xl font-bold num mt-1" id="kpiIRR">2.31%</div>
+          <div class="text-[11px] mt-0.5" id="kpiIRRSub">&lt; 基准 8%</div>
+        </div>
+        <div class="card p-4 kpi">
+          <div class="text-xs text-slate-500">静态回收期</div>
+          <div class="text-xl md:text-2xl font-bold num mt-1" id="kpiPayback">17.1 年</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">未贴现</div>
+        </div>
+      </div>
+
+      <!-- 分项收益 -->
+      <div class="card p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <h3 class="font-semibold">年分项收益（实时）</h3>
+          <span class="text-xs text-slate-500">单位：万元/年</span>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <canvas id="revenueChart" height="240"></canvas>
+          </div>
+          <div class="space-y-3 text-sm">
+            <div class="flex items-center justify-between border-b pb-2">
+              <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm bg-emerald-600"></span>现货价差套利</span>
+              <span class="num font-semibold" id="rSpot">11,200</span>
+            </div>
+            <div class="flex items-center justify-between border-b pb-2">
+              <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm bg-amber-500"></span>容量电价补偿</span>
+              <span class="num font-semibold" id="rCap">4,613</span>
+            </div>
+            <div class="flex items-center justify-between border-b pb-2">
+              <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm bg-sky-500"></span>容量租赁</span>
+              <span class="num font-semibold" id="rLease">2,400</span>
+            </div>
+            <div class="flex items-center justify-between border-b pb-2">
+              <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm bg-violet-500"></span>辅助服务</span>
+              <span class="num font-semibold" id="rAs">400</span>
+            </div>
+            <div class="flex items-center justify-between border-b pb-2">
+              <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm bg-rose-500"></span>其他补贴/调用补偿</span>
+              <span class="num font-semibold" id="rOther">400</span>
+            </div>
+            <div class="flex items-center justify-between pt-1">
+              <span class="font-semibold">合计年收入</span>
+              <span class="num font-bold text-emerald-700 text-lg" id="rTotal">19,013</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 成本与利润 -->
+      <div class="card p-6">
+        <h3 class="font-semibold mb-4">成本与利润（万元/年）</h3>
+        <div class="grid md:grid-cols-2 gap-6 text-sm">
+          <div class="space-y-2">
+            <div class="divider-label">成本</div>
+            <div class="flex justify-between"><span class="text-slate-600">运维成本</span><span class="num" id="cOm">1,152</span></div>
+            <div class="flex justify-between"><span class="text-slate-600">站用电</span><span class="num" id="cStation">432</span></div>
+            <div class="flex justify-between"><span class="text-slate-600">人工成本</span><span class="num" id="cStaff">375</span></div>
+            <div class="flex justify-between"><span class="text-slate-600">保险费</span><span class="num" id="cIns">288</span></div>
+            <div class="flex justify-between"><span class="text-slate-600">其他费用</span><span class="num" id="cOther">600</span></div>
+            <div class="flex justify-between border-t pt-2"><span class="text-slate-600">运营成本小计</span><span class="num font-semibold" id="cOpex">2,847</span></div>
+            <div class="flex justify-between"><span class="text-slate-600">年折旧</span><span class="num" id="cDep">9,200</span></div>
+            <div class="flex justify-between"><span class="text-slate-600">年财务费用</span><span class="num" id="cFin">3,528</span></div>
+            <div class="flex justify-between border-t pt-2"><span class="font-semibold">年度总成本</span><span class="num font-bold" id="cTotal">15,575</span></div>
+          </div>
+          <div class="space-y-2">
+            <div class="divider-label">利润</div>
+            <div class="flex justify-between"><span class="text-slate-600">EBITDA</span><span class="num font-semibold" id="pEbitda">16,166</span></div>
+            <div class="flex justify-between"><span class="text-slate-600">EBIT</span><span class="num" id="pEbit">6,966</span></div>
+            <div class="flex justify-between"><span class="text-slate-600">税前利润</span><span class="num" id="pPretax">3,438</span></div>
+            <div class="flex justify-between"><span class="text-slate-600">所得税 (25%)</span><span class="num" id="pTax">860</span></div>
+            <div class="flex justify-between border-t pt-2"><span class="font-semibold">净利润</span><span class="num font-bold" id="pNet">2,578</span></div>
+            <div class="flex justify-between"><span class="text-slate-600">经营现金流 (OCF)</span><span class="num font-semibold text-emerald-700" id="pOcf">11,778</span></div>
+            <div class="flex justify-between"><span class="text-slate-600">NPV (8%)</span><span class="num font-semibold" id="pNpv">−5.00 亿</span></div>
+            <div class="flex justify-between"><span class="text-slate-600">IRR</span><span class="num font-semibold" id="pIrr">2.31%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 盈亏平衡提示 -->
+      <div class="card p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+          <h3 class="font-semibold">盈亏平衡敏感度（IRR = 8%）</h3>
+          <span class="chip tag-info" id="beBadge">实时</span>
+        </div>
+        <div class="grid md:grid-cols-3 gap-4 text-sm">
+          <div class="p-4 rounded-lg bg-slate-50">
+            <div class="text-slate-500 text-xs">所需现货价差</div>
+            <div class="num font-bold text-lg mt-1" id="beSpread">0.633 元/kWh</div>
+          </div>
+          <div class="p-4 rounded-lg bg-slate-50">
+            <div class="text-slate-500 text-xs">所需综合单价</div>
+            <div class="num font-bold text-lg mt-1" id="beCapex">783 元/kWh</div>
+          </div>
+          <div class="p-4 rounded-lg bg-slate-50">
+            <div class="text-slate-500 text-xs">所需年总收入</div>
+            <div class="num font-bold text-lg mt-1" id="beRevenue">22,864 万元</div>
+          </div>
+        </div>
+        <p class="text-[11px] text-slate-500 mt-3">
+          注：盈亏平衡取 NPV=0（8% 折现率），采用反求法推导——固定其他参数，单独调整目标变量至 NPV=0。
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 政策依据 ============ -->
+<section id="policy" class="bg-white border-y border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 md:px-6 py-16">
+    <div class="mb-8">
+      <div class="text-xs text-emerald-700 font-semibold tracking-widest">04 · POLICY BASIS</div>
+      <h2 class="text-2xl md:text-3xl font-bold mt-1">政策依据 · 测算勾稽关系</h2>
+      <p class="text-slate-600 mt-2">本测算器的每一分项收益均与最新政策条文形成明确勾稽关系。</p>
+    </div>
+    <div class="grid md:grid-cols-2 gap-5">
+      <div class="card p-6">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold">①</div>
+          <div>
+            <h4 class="font-semibold">现货价差套利</h4>
+            <p class="text-sm text-slate-600 mt-1">《青海电力现货市场规则汇编 V6.0（结算试运行稿）》（2025-10）</p>
+            <ul class="text-xs text-slate-500 mt-2 space-y-1 list-disc pl-4">
+              <li>申报价 0.08–0.65 元/kWh，二级限价 0.30 元/kWh</li>
+              <li>2025-10-28 起连续试运行，11-01 起实际结算</li>
+              <li>公式：放电电量 × 价差 × 市场化比例</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card p-6">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-amber-500 text-white flex items-center justify-center font-bold">②</div>
+          <div>
+            <h4 class="font-semibold">发电侧容量电价</h4>
+            <p class="text-sm text-slate-600 mt-1">《关于建立青海省发电侧容量电价机制的通知（征求意见稿）》（2025-10）</p>
+            <ul class="text-xs text-slate-500 mt-2 space-y-1 list-disc pl-4">
+              <li>2026 年补偿标准 165 元/kW·年、供需系数 1.04</li>
+              <li>有效容量 = 放电功率 ×(1−厂用电率)× 可靠容量系数</li>
+              <li>可靠容量系数 = MIN( 放电时长 / 净负荷高峰时长, 100% )</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card p-6">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-sky-500 text-white flex items-center justify-center font-bold">③</div>
+          <div>
+            <h4 class="font-semibold">容量租赁</h4>
+            <p class="text-sm text-slate-600 mt-1">136 号文 · 深化新能源上网电价市场化改革（2025-02）</p>
+            <ul class="text-xs text-slate-500 mt-2 space-y-1 list-disc pl-4">
+              <li>取消强制配储 → 租赁需求承压</li>
+              <li>公式：装机功率 × 租赁价 × 出租率</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card p-6">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-violet-500 text-white flex items-center justify-center font-bold">④</div>
+          <div>
+            <h4 class="font-semibold">辅助服务 / 调用补偿</h4>
+            <p class="text-sm text-slate-600 mt-1">西北监能市场〔2025〕48 号 + 现货规则 V6.0</p>
+            <ul class="text-xs text-slate-500 mt-2 space-y-1 list-disc pl-4">
+              <li>储能调峰价 0.3247 元/kWh</li>
+              <li>现货连续运行后调峰融入现货，保留调用补偿</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 风险与建议 ============ -->
+<section id="risk" class="max-w-7xl mx-auto px-4 md:px-6 py-16">
+  <div class="mb-8">
+    <div class="text-xs text-emerald-700 font-semibold tracking-widest">05 · RISKS & ADVICE</div>
+    <h2 class="text-2xl md:text-3xl font-bold mt-1">风险因素与投资建议</h2>
+  </div>
+  <div class="grid md:grid-cols-2 gap-5">
+    <div class="card p-6">
+      <h3 class="font-semibold mb-3">核心风险</h3>
+      <ul class="text-sm space-y-3">
+        <li class="flex gap-3"><span class="chip tag-bad shrink-0">高</span><span><b>投资成本偏高</b>：1,200 元/kWh 单价下中性 IRR 仅 2.31%，显著低于基准 8%。</span></li>
+        <li class="flex gap-3"><span class="chip tag-warn shrink-0">中</span><span><b>容量租赁承压</b>：136 号文后强制配储取消，租赁价与出租率双降。</span></li>
+        <li class="flex gap-3"><span class="chip tag-warn shrink-0">中</span><span><b>现货价差波动</b>：需持续 ≥0.63 元/kWh 方可实现盈亏平衡。</span></li>
+        <li class="flex gap-3"><span class="chip tag-info shrink-0">低</span><span><b>电池更换</b>：运营第 12 年约需再投入 6 亿元。</span></li>
+      </ul>
+    </div>
+    <div class="card p-6">
+      <h3 class="font-semibold mb-3">投资建议（优先级）</h3>
+      <ul class="text-sm space-y-3">
+        <li class="flex gap-3"><span class="chip tag-good shrink-0">★★★★★</span><span><b>压降投资成本</b>至 900 元/kWh 以下，为项目可行前提。</span></li>
+        <li class="flex gap-3"><span class="chip tag-good shrink-0">★★★★</span><span><b>拓展现货套利</b>：专业交易团队 + 中长期合约对冲。</span></li>
+        <li class="flex gap-3"><span class="chip tag-good shrink-0">★★★</span><span><b>争取绿色信贷</b>利率至 2.5% 以下。</span></li>
+        <li class="flex gap-3"><span class="chip tag-good shrink-0">★★★</span><span><b>锁定容量补偿</b>并预留电池更换资金。</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 页脚 ============ -->
+<footer class="bg-slate-900 text-slate-400">
+  <div class="max-w-7xl mx-auto px-4 md:px-6 py-10 grid md:grid-cols-3 gap-8 text-sm">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="w-9 h-9 rounded-xl brand-gradient flex items-center justify-center text-white font-bold">易</span>
+        <div><div class="text-white font-semibold">易储能源</div><div class="text-xs">青海省独立储能专栏</div></div>
+      </div>
+      <p class="mt-3 text-xs leading-relaxed">
+        本站测算基于公开政策文件与市场数据，实际收益受政策变化、市场波动与技术性能影响，测算结果仅供参考，不构成投资建议。
+      </p>
+    </div>
+    <div>
+      <div class="text-white font-semibold mb-2">数据来源</div>
+      <ul class="text-xs space-y-1">
+        <li>青海省发改委《发电侧容量电价机制（征求意见稿）》</li>
+        <li>西北监能市场〔2025〕48 号</li>
+        <li>《青海电力现货市场规则汇编 V6.0》</li>
+        <li>136 号文 · 新能源上网电价市场化改革</li>
+      </ul>
+    </div>
+    <div>
+      <div class="text-white font-semibold mb-2">联系我们</div>
+      <ul class="text-xs space-y-1">
+        <li>项目合作：bd@yichu-energy.com</li>
+        <li>技术咨询：tech@yichu-energy.com</li>
+        <li>地址：青海省西宁市</li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-slate-800 py-4 text-xs text-center">© 2026 易储能源 · 青海省独立储能专栏 · 仅供参考</div>
+</footer>
+
+<script>
+/* ========== 图表：投资构成 ========== */
+new Chart(document.getElementById('investChart'), {
+  type:'doughnut',
+  data:{
+    labels:['储能电池系统','PCS及电池舱','升压站/GIS/土建','土地征用','工程建设其他','基本预备费','建设期利息'],
+    datasets:[{
+      data:[60000,12000,42000,6380,14820,7792,1008],
+      backgroundColor:['#0b6e4f','#13a474','#f5b301','#fb923c','#38bdf8','#a78bfa','#f87171'],
+      borderWidth:0
+    }]
+  },
+  options:{plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}}},cutout:'60%'}
+});
+
+/* ========== 图表：情景对比 ========== */
+new Chart(document.getElementById('scenarioChart'), {
+  type:'bar',
+  data:{
+    labels:['现货套利','容量补偿','容量租赁','辅助服务','调用补偿'],
+    datasets:[
+      {label:'保守', data:[8200,4613,1200,200,300], backgroundColor:'#fca5a5'},
+      {label:'中性', data:[11200,4613,2400,400,400], backgroundColor:'#fbbf24'},
+      {label:'乐观', data:[14200,4613,4200,600,500], backgroundColor:'#10b981'},
+    ]
+  },
+  options:{
+    responsive:true,
+    scales:{y:{beginAtZero:true,ticks:{callback:v=>v.toLocaleString()}}},
+    plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}}}
+  }
+});
+
+/* ========== 测算器 ========== */
+// 同步 number & range
+const pairs = [
+  'power','duration','capex','rte','avail','cycles','days','aux','equity','rate','life',
+  'spread','spotRatio','capPrice','capCoef','relCoef',
+  'leasePrice','leaseRate','asPrice','asHours','subsidy',
+  'omRate','stationE','staff','salary','insRate','other'
+];
+pairs.forEach(id=>{
+  const n=document.getElementById(id), r=document.getElementById(id+'R');
+  if(!n||!r) return;
+  n.addEventListener('input',()=>{r.value=n.value;calc();});
+  r.addEventListener('input',()=>{n.value=r.value;calc();});
+});
+
+// 预设
+const presets={
+  conservative:{spread:0.40,leasePrice:100,leaseRate:40,asHours:100,subsidy:300},
+  neutral:     {spread:0.50,leasePrice:200,leaseRate:70,asHours:200,subsidy:400},
+  optimistic:  {spread:0.57,leasePrice:300,leaseRate:90,asHours:300,subsidy:500},
+};
+const baseDefaults={
+  power:300,duration:4,capex:1200,rte:86,avail:85,cycles:1,days:330,aux:10.39,
+  equity:30,rate:3.5,life:20,spread:0.5,spotRatio:100,capPrice:165,capCoef:1.04,relCoef:100,
+  leasePrice:200,leaseRate:70,asPrice:0.3247,asHours:200,subsidy:400,
+  omRate:0.8,stationE:0.3,staff:25,salary:15,insRate:0.2,other:600
+};
+function applyPreset(p){
+  Object.entries(p).forEach(([k,v])=>{
+    const n=document.getElementById(k), r=document.getElementById(k+'R');
+    if(n) n.value=v;
+    if(r) r.value=v;
+  });
+  calc();
+}
+document.getElementById('presetConservative').addEventListener('click',()=>applyPreset(presets.conservative));
+document.getElementById('presetNeutral').addEventListener('click',()=>applyPreset(presets.neutral));
+document.getElementById('presetOptimistic').addEventListener('click',()=>applyPreset(presets.optimistic));
+document.getElementById('presetReset').addEventListener('click',()=>applyPreset(baseDefaults));
+
+// 数值读取
+const v = id => parseFloat(document.getElementById(id).value)||0;
+
+/* ========== 核心计算逻辑（勾稽关系） ========== */
+function computeRevenues(inp){
+  // 衍生量
+  const energyMWh = inp.power * inp.duration;          // MWh
+  const energykWh = energyMWh * 1000;
+  const totalCapexWan = energykWh * inp.capex / 10000; // 万元
+  // ① 现货套利：放电电量(MWh/日) = 容量 × 可用率 × 往返效率
+  const dailyDischargeMWh = energyMWh * (inp.avail/100) * (inp.rte/100) * inp.cycles;
+  const annualDischargeMWh = dailyDischargeMWh * inp.days;
+  const spotRevenueWan = annualDischargeMWh * 1000 * inp.spread * (inp.spotRatio/100) / 10000;
+  // ② 容量电价：有效容量 = 功率(kW) × (1-厂用电率) × 可靠容量系数
+  const effectiveKW = inp.power * 1000 * (1 - inp.aux/100) * (inp.relCoef/100);
+  const capacityRevenueWan = effectiveKW * inp.capPrice * inp.capCoef / 10000;
+  // ③ 容量租赁
+  const leaseRevenueWan = inp.power * 1000 * inp.leasePrice * (inp.leaseRate/100) / 10000;
+  // ④ 辅助服务：调峰价 × 放电功率 × 调用小时
+  const asRevenueWan = inp.asPrice * inp.power * 1000 * inp.asHours / 10000;
+  // ⑤ 其他补贴
+  const otherRevenueWan = inp.subsidy;
+  const totalRevenueWan = spotRevenueWan + capacityRevenueWan + leaseRevenueWan + asRevenueWan + otherRevenueWan;
+  return {energyMWh,totalCapexWan,annualDischargeMWh,effectiveKW,
+    spot:spotRevenueWan,cap:capacityRevenueWan,lease:leaseRevenueWan,as:asRevenueWan,other:otherRevenueWan,total:totalRevenueWan};
+}
+function computeCosts(inp,capexWan){
+  const om = capexWan * inp.omRate/100;
+  const st = capexWan * inp.stationE/100;
+  const sf = inp.staff * inp.salary;
+  const ins = capexWan * inp.insRate/100;
+  const ot = inp.other;
+  const opex = om+st+sf+ins+ot;
+  // 折旧：电池41.67% / 12 年 + 其他 58.33% / 20年
+  const dep = capexWan*0.4167/12 + capexWan*0.5833/20;
+  // 财务费用：贷款 × 利率 （简化按全贷款余额；首年）
+  const loan = capexWan * (1-inp.equity/100);
+  const fin = loan * inp.rate/100;
+  const total = opex+dep+fin;
+  return {om,st,sf,ins,ot,opex,dep,fin,total,loan};
+}
+function computeProfit(rev,cost){
+  const ebitda = rev - cost.opex;
+  const ebit = ebitda - cost.dep;
+  const pretax = ebit - cost.fin;
+  const tax = pretax>0 ? pretax*0.25 : 0;
+  const net = pretax - tax;
+  const ocf = net + cost.dep; // 简化
+  return {ebitda,ebit,pretax,tax,net,ocf};
+}
+// 项目现金流：考虑爬坡、三免三减半、第12年电池更换
+function projectCashflow(inp,rev,cost){
+  const years = inp.life;
+  const batteryReplace = inp.totalCapexWan * 0.4167; // 第12年电池重置（万元）
+  const ramp = [0.8,0.9,1.0];
+  const cfs = [-inp.totalCapexWan];
+  for(let t=1;t<=years;t++){
+    const r = rev * (t<=3 ? ramp[t-1] : 1);
+    const ebitda = r - cost.opex;
+    const ebit = ebitda - cost.dep;
+    const pretax = ebit - cost.fin;
+    let rate = 0.25;
+    if(t<=3) rate = 0;
+    else if(t<=6) rate = 0.125;
+    const tax = pretax>0 ? pretax*rate : 0;
+    const net = pretax - tax;
+    let ocf = net + cost.dep;
+    if(t===12) ocf -= batteryReplace;
+    cfs.push(ocf);
+  }
+  return cfs;
+}
+function npv(cfs,r){return cfs.reduce((s,c,i)=>s+c/Math.pow(1+r,i),0);}
+function irr(cfs){
+  let lo=-0.5, hi=1.0;
+  const f = r => npv(cfs,r);
+  if(f(lo)*f(hi) > 0){
+    // 扩大搜索
+    if(f(hi)<0) return NaN;
+  }
+  for(let i=0;i<80;i++){
+    const mid=(lo+hi)/2;
+    if(f(mid)>0) lo=mid; else hi=mid;
+  }
+  return (lo+hi)/2;
+}
+function payback(cfs){
+  let cum=0;
+  for(let i=0;i<cfs.length;i++){
+    cum+=cfs[i];
+    if(cum>=0){
+      if(i===0) return 0;
+      return i-1 + (-cum+cfs[i])/cfs[i];
+    }
+  }
+  return Infinity;
+}
+
+/* ========== 图表实例 ========== */
+const revenueChart = new Chart(document.getElementById('revenueChart'),{
+  type:'doughnut',
+  data:{
+    labels:['现货套利','容量补偿','容量租赁','辅助服务','其他补贴'],
+    datasets:[{data:[11200,4613,2400,400,400],
+      backgroundColor:['#0b6e4f','#f5b301','#0ea5e9','#8b5cf6','#f43f5e'],borderWidth:0}]
+  },
+  options:{
+    plugins:{
+      legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},
+      tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed.toLocaleString()} 万元`}}
+    },
+    cutout:'60%'
+  }
+});
+
+/* ========== 主计算 ========== */
+function fmt(n,d=0){ if(!isFinite(n)) return '—'; return n.toLocaleString('zh-CN',{maximumFractionDigits:d,minimumFractionDigits:d}); }
+function fmtYi(wan){ return (wan/10000).toFixed(2)+' 亿'; }
+
+function calc(){
+  const inp = {};
+  pairs.forEach(id=>inp[id]=v(id));
+  const rev = computeRevenues(inp);
+  inp.totalCapexWan = rev.totalCapexWan;
+  const cost = computeCosts(inp, rev.totalCapexWan);
+  const profit = computeProfit(rev.total, cost);
+
+  // 分项
+  document.getElementById('rSpot').textContent = fmt(rev.spot);
+  document.getElementById('rCap').textContent = fmt(rev.cap);
+  document.getElementById('rLease').textContent = fmt(rev.lease);
+  document.getElementById('rAs').textContent = fmt(rev.as);
+  document.getElementById('rOther').textContent = fmt(rev.other);
+  document.getElementById('rTotal').textContent = fmt(rev.total);
+
+  // 成本
+  document.getElementById('cOm').textContent = fmt(cost.om);
+  document.getElementById('cStation').textContent = fmt(cost.st);
+  document.getElementById('cStaff').textContent = fmt(cost.sf);
+  document.getElementById('cIns').textContent = fmt(cost.ins);
+  document.getElementById('cOther').textContent = fmt(cost.ot);
+  document.getElementById('cOpex').textContent = fmt(cost.opex);
+  document.getElementById('cDep').textContent = fmt(cost.dep);
+  document.getElementById('cFin').textContent = fmt(cost.fin);
+  document.getElementById('cTotal').textContent = fmt(cost.total);
+
+  // 利润
+  document.getElementById('pEbitda').textContent = fmt(profit.ebitda);
+  document.getElementById('pEbit').textContent = fmt(profit.ebit);
+  document.getElementById('pPretax').textContent = fmt(profit.pretax);
+  document.getElementById('pTax').textContent = fmt(profit.tax);
+  document.getElementById('pNet').textContent = fmt(profit.net);
+  document.getElementById('pOcf').textContent = fmt(profit.ocf);
+
+  // 项目现金流 / NPV / IRR
+  const cfs = projectCashflow(inp, rev.total, cost);
+  const discount = 0.08;
+  const np = npv(cfs, discount);
+  const ir = irr(cfs);
+  const pb = payback(cfs);
+  document.getElementById('pNpv').textContent = (np>=0?'+':'−') + Math.abs(np/10000).toFixed(2)+' 亿';
+  document.getElementById('pIrr').textContent = isFinite(ir)? (ir*100).toFixed(2)+'%' : '—';
+
+  // KPI
+  document.getElementById('kpiCapex').textContent = fmtYi(rev.totalCapexWan);
+  document.getElementById('kpiCapexSub').textContent = `${fmt(inp.capex)} 元/kWh · ${fmt(rev.energyMWh)} MWh`;
+  document.getElementById('kpiRevenue').textContent = fmtYi(rev.total);
+  document.getElementById('kpiIRR').textContent = isFinite(ir)? (ir*100).toFixed(2)+'%' : '—';
+  const irrEl = document.getElementById('kpiIRR');
+  const irrSub = document.getElementById('kpiIRRSub');
+  if(ir>=0.08){ irrEl.className='text-xl md:text-2xl font-bold num mt-1 text-emerald-700'; irrSub.className='text-[11px] mt-0.5 text-emerald-700'; irrSub.textContent='≥ 基准 8% ✓'; }
+  else if(ir>=0.05){ irrEl.className='text-xl md:text-2xl font-bold num mt-1 text-amber-600'; irrSub.className='text-[11px] mt-0.5 text-amber-600'; irrSub.textContent='低于基准 8%'; }
+  else { irrEl.className='text-xl md:text-2xl font-bold num mt-1 text-rose-600'; irrSub.className='text-[11px] mt-0.5 text-rose-600'; irrSub.textContent='显著低于基准'; }
+  document.getElementById('kpiPayback').textContent = isFinite(pb)? pb.toFixed(1)+' 年':'> '+inp.life+' 年';
+
+  // 更新饼图
+  revenueChart.data.datasets[0].data = [rev.spot,rev.cap,rev.lease,rev.as,rev.other];
+  revenueChart.update();
+
+  // 盈亏平衡（以 NPV=0 为目标，单独求解）
+  const targetNpvRevenue = solveBreakevenRevenue(inp, cost, discount);
+  const extraNeeded = targetNpvRevenue - rev.total;
+  const needSpread = inp.spread + (extraNeeded*10000) / (rev.annualDischargeMWh*1000*(inp.spotRatio/100));
+  const needCapex = solveBreakevenCapex(inp, rev.total, discount);
+  document.getElementById('beRevenue').textContent = fmt(targetNpvRevenue)+' 万元';
+  document.getElementById('beSpread').textContent = isFinite(needSpread)? needSpread.toFixed(3)+' 元/kWh' : '—';
+  document.getElementById('beCapex').textContent = isFinite(needCapex)? Math.round(needCapex)+' 元/kWh' : '—';
+
+  const beBadge = document.getElementById('beBadge');
+  if(ir>=0.08){ beBadge.className='chip tag-good'; beBadge.textContent='项目已达盈亏平衡'; }
+  else { beBadge.className='chip tag-warn'; beBadge.textContent='未达盈亏平衡 · 目标 IRR 8%'; }
+}
+
+// 反求：固定其他参数，求 NPV=0 时的年收入
+function solveBreakevenRevenue(inp, cost, r){
+  let lo=0, hi=1e6; // 万元
+  for(let i=0;i<60;i++){
+    const mid=(lo+hi)/2;
+    const cfs = projectCashflow(inp, mid, cost);
+    if(npv(cfs,r)>0) hi=mid; else lo=mid;
+  }
+  return (lo+hi)/2;
+}
+// 反求：给定年收入，求 NPV=0 时的投资单价（元/kWh）
+function solveBreakevenCapex(inp, rev, r){
+  const energykWh = inp.power * inp.duration * 1000;
+  let lo=200, hi=2500;
+  for(let i=0;i<60;i++){
+    const mid=(lo+hi)/2;
+    const capexWan = energykWh * mid / 10000;
+    const tmpInp = {...inp, totalCapexWan: capexWan};
+    const c = computeCosts(tmpInp, capexWan);
+    const cfs = projectCashflow(tmpInp, rev, c);
+    if(npv(cfs,r)>0) lo=mid; else hi=mid;
+  }
+  return (lo+hi)/2;
+}
+
+// 初次渲染
+calc();
+</script>
+</body>
+</html>
