@@ -7,6 +7,7 @@
 <meta name="description" content="易储能源 · 青海省海西300MW/1200MWh独立储能电站投资与收益分析专栏，含可调参数实时测算器。" />
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js"></script>
 <style>
   :root{
     --ys-primary:#0b6e4f;
@@ -44,6 +45,18 @@
     radial-gradient(farthest-side at 50% 0, rgba(15,23,42,.12), transparent),
     radial-gradient(farthest-side at 50% 100%, rgba(15,23,42,.12), transparent) 0 100%;
     background-repeat:no-repeat;background-size:100% 40px,100% 40px,100% 10px,100% 10px;background-attachment:local,local,scroll,scroll;}
+  /* PDF 导出时：禁用 sticky/backdrop，避免黑块与错位 */
+  .pdf-export header{position:static!important;background:#fff!important;backdrop-filter:none!important;}
+  .pdf-export .hero-pattern{background:#0b6e4f!important;}
+  .pdf-export details{page-break-inside:avoid;}
+  .pdf-export .card{page-break-inside:avoid;box-shadow:none!important;border:1px solid #e2e8f0;}
+  .pdf-export section{page-break-inside:auto;}
+  .pdf-export .no-pdf{display:none!important;}
+  /* 导出中遮罩 */
+  .pdf-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:9999;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;}
+  .pdf-overlay .box{background:#0b6e4f;padding:20px 28px;border-radius:12px;display:flex;align-items:center;gap:12px;}
+  .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:9999px;animation:spin 0.8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
 </style>
 </head>
 <body class="bg-slate-50">
@@ -65,7 +78,13 @@
       <a href="#policy" class="hover:text-emerald-700">政策依据</a>
       <a href="#risk" class="hover:text-emerald-700">风险与建议</a>
     </nav>
-    <a href="#calculator" class="text-sm bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-lg font-medium">立即测算</a>
+    <div class="flex items-center gap-2">
+      <button id="btnExportPdf" class="no-pdf text-sm bg-white hover:bg-slate-100 text-emerald-800 border border-emerald-700 px-3 py-2 rounded-lg font-medium flex items-center gap-1" title="导出当前参数下的完整报告为 PDF">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+        导出 PDF
+      </button>
+      <a href="#calculator" class="text-sm bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-lg font-medium">立即测算</a>
+    </div>
   </div>
 </header>
 
@@ -84,26 +103,30 @@
       依据《青海发电侧容量电价机制（征求意见稿）》《青海电力现货市场规则 V6.0》《西北监能市场〔2025〕48号》等最新政策，
       构建现货套利、容量补偿、容量租赁、辅助服务、调用补偿五位一体的收益测算模型。
     </p>
-    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
+    <div class="mt-6 flex items-center gap-2 text-xs text-white/75">
+      <span class="inline-block w-2 h-2 bg-emerald-300 rounded-full animate-pulse"></span>
+      下方 4 项 KPI 跟随测算器参数实时刷新 · 当前场景 <span id="heroScenario" class="px-2 py-0.5 rounded bg-white/15 border border-white/20 ml-1">中性</span>
+    </div>
+    <div class="mt-3 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
       <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/15">
         <div class="text-xs text-white/70">项目总投资</div>
-        <div class="text-2xl md:text-3xl font-bold num">14.4<span class="text-base font-medium ml-1">亿元</span></div>
-        <div class="text-[11px] text-white/60 mt-1">综合单价 1,200 元/kWh</div>
+        <div class="text-2xl md:text-3xl font-bold num"><span id="heroCapex">14.40</span><span class="text-base font-medium ml-1">亿元</span></div>
+        <div class="text-[11px] text-white/60 mt-1">综合单价 <span id="heroUnitPrice" class="num">1,200</span> 元/kWh</div>
       </div>
       <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/15">
-        <div class="text-xs text-white/70">中性情景年收入</div>
-        <div class="text-2xl md:text-3xl font-bold num">1.90<span class="text-base font-medium ml-1">亿元</span></div>
+        <div class="text-xs text-white/70">年总收入</div>
+        <div class="text-2xl md:text-3xl font-bold num"><span id="heroRevenue">1.90</span><span class="text-base font-medium ml-1">亿元</span></div>
         <div class="text-[11px] text-white/60 mt-1">现货+容量+租赁+辅助</div>
       </div>
       <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/15">
-        <div class="text-xs text-white/70">容量补偿（2026）</div>
-        <div class="text-2xl md:text-3xl font-bold num">165<span class="text-base font-medium ml-1">元/kW·年</span></div>
-        <div class="text-[11px] text-white/60 mt-1">年补偿约 4,613 万元</div>
+        <div class="text-xs text-white/70">项目 IRR</div>
+        <div class="text-2xl md:text-3xl font-bold num"><span id="heroIrr">2.31</span><span class="text-base font-medium ml-1">%</span></div>
+        <div class="text-[11px] text-white/60 mt-1" id="heroIrrSub">基准 8%</div>
       </div>
       <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/15">
-        <div class="text-xs text-white/70">现货价差（青海）</div>
-        <div class="text-2xl md:text-3xl font-bold num">0.57<span class="text-base font-medium ml-1">元/kWh</span></div>
-        <div class="text-[11px] text-white/60 mt-1">2025年9月发改委数据</div>
+        <div class="text-xs text-white/70">NPV (8%)</div>
+        <div class="text-2xl md:text-3xl font-bold num"><span id="heroNpv">−5.00</span><span class="text-base font-medium ml-1">亿元</span></div>
+        <div class="text-[11px] text-white/60 mt-1">静态回收期 <span id="heroPayback" class="num">17.1</span> 年</div>
       </div>
     </div>
     <div class="mt-10 flex flex-wrap gap-3">
@@ -1029,6 +1052,22 @@ function calc(){
   // === 三情景对比（基于当前系统参数） ===
   renderScenarios(inp);
   document.getElementById('sc_life').textContent = inp.life;
+
+  // === Hero KPI（顶部横幅，实时联动） ===
+  document.getElementById('heroCapex').textContent = (rev.totalCapexWan/10000).toFixed(2);
+  document.getElementById('heroUnitPrice').textContent = fmt(inp.capex);
+  document.getElementById('heroRevenue').textContent = (rev.total/10000).toFixed(2);
+  document.getElementById('heroIrr').textContent = isFinite(ir)? (ir*100).toFixed(2) : '—';
+  const hIrrSub = document.getElementById('heroIrrSub');
+  if(ir>=0.08) hIrrSub.textContent = '≥ 基准 8% ✓';
+  else if(ir>=0.05) hIrrSub.textContent = '低于基准 8%';
+  else hIrrSub.textContent = '显著低于基准 8%';
+  document.getElementById('heroNpv').textContent = (np>=0?'+':'−') + Math.abs(np/10000).toFixed(2);
+  document.getElementById('heroPayback').textContent = isFinite(pb)? pb.toFixed(1) : '>'+inp.life;
+  // 当前场景判断
+  const hs = document.getElementById('heroScenario');
+  const matched = detectPresetScenario(inp);
+  hs.textContent = matched ? matched : '自定义';
 }
 
 /* ========== 渲染：投资构成 ========== */
@@ -1165,6 +1204,53 @@ function solveBreakevenCapex(inp, rev, r){
   }
   return (lo+hi)/2;
 }
+
+/* ========== 判断当前参数属于哪个预设情景 ========== */
+function detectPresetScenario(inp){
+  const keys = ['spread','leasePrice','leaseRate','asHours','subsidy'];
+  for(const name of ['conservative','neutral','optimistic']){
+    const m = SCENARIOS[name].market;
+    if(keys.every(k => Math.abs(inp[k]-m[k])<1e-6)) return SCENARIOS[name].label;
+  }
+  return null;
+}
+
+/* ========== PDF 导出 ========== */
+async function exportPdf(){
+  const btn = document.getElementById('btnExportPdf');
+  btn.disabled = true;
+  const overlay = document.createElement('div');
+  overlay.className = 'pdf-overlay';
+  overlay.innerHTML = '<div class="box"><span class="spinner"></span><span>正在生成 PDF，请稍候…</span></div>';
+  document.body.appendChild(overlay);
+  document.body.classList.add('pdf-export');
+  // 展开所有 details，保证内容完整
+  const detailsArr = [...document.querySelectorAll('details')];
+  const prevOpen = detailsArr.map(d=>d.open);
+  detailsArr.forEach(d=>d.open=true);
+  // 等待图表/布局稳定
+  await new Promise(r=>setTimeout(r,250));
+  const filename = `易储能源_青海独立储能收益分析_${new Date().toISOString().slice(0,10)}.pdf`;
+  try{
+    await html2pdf().set({
+      margin: [6,6,6,6],
+      filename,
+      image: {type:'jpeg', quality:0.95},
+      html2canvas: {scale:2, useCORS:true, backgroundColor:'#ffffff', windowWidth: document.documentElement.scrollWidth},
+      jsPDF: {unit:'mm', format:'a4', orientation:'portrait', compress:true},
+      pagebreak: {mode:['css','legacy'], avoid:['.card','table','details','canvas']}
+    }).from(document.body).save();
+  }catch(e){
+    console.error(e);
+    alert('PDF 导出失败：'+e.message);
+  }finally{
+    document.body.classList.remove('pdf-export');
+    detailsArr.forEach((d,i)=>d.open=prevOpen[i]);
+    overlay.remove();
+    btn.disabled = false;
+  }
+}
+document.getElementById('btnExportPdf').addEventListener('click', exportPdf);
 
 // 初次渲染
 calc();
