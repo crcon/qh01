@@ -155,16 +155,25 @@
 <!-- ============ 投资与收益展示 ============ -->
 <section id="returns" class="bg-white border-y border-slate-200">
   <div class="max-w-7xl mx-auto px-4 md:px-6 py-16">
-    <div class="mb-8">
-      <div class="text-xs text-emerald-700 font-semibold tracking-widest">02 · INVESTMENT & RETURNS</div>
-      <h2 class="text-2xl md:text-3xl font-bold mt-1">投资构成与三情景收益</h2>
-      <p class="text-slate-600 mt-2">按投资估算表同比例放大至 1,200 MWh，总投资 14.4 亿元；年收益由五大来源构成。</p>
+    <div class="mb-8 flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <div class="text-xs text-emerald-700 font-semibold tracking-widest">02 · INVESTMENT & RETURNS</div>
+        <h2 class="text-2xl md:text-3xl font-bold mt-1">投资构成与三情景收益</h2>
+        <p class="text-slate-600 mt-2">本板块所有数据均与下方 <a href="#calculator" class="text-emerald-700 underline underline-offset-2">测算器</a> 实时联动，调整参数后即时刷新。</p>
+      </div>
+      <div class="text-xs text-slate-500 flex items-center gap-2">
+        <span class="inline-block w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+        实时联动
+      </div>
     </div>
 
     <!-- 投资构成 -->
     <div class="grid lg:grid-cols-5 gap-5">
       <div class="card p-6 lg:col-span-3">
-        <h3 class="font-semibold text-slate-900 mb-4">投资构成（14.4 亿元）</h3>
+        <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <h3 class="font-semibold text-slate-900">投资构成 · <span id="iv_total_yi" class="text-emerald-700">14.40</span> 亿元</h3>
+          <span class="text-xs text-slate-500">单价 <span id="iv_unit_price" class="num font-semibold text-slate-700">1,200</span> 元/kWh × <span id="iv_capacity" class="num font-semibold text-slate-700">1,200</span> MWh</span>
+        </div>
         <div class="overflow-x-auto scroll-shadow">
           <table class="w-full text-sm">
             <thead>
@@ -175,18 +184,10 @@
                 <th class="py-2 font-medium text-right">占比</th>
               </tr>
             </thead>
-            <tbody class="num">
-              <tr class="border-b"><td class="py-2 pr-3">储能电池系统</td><td class="text-right pr-3">60,000</td><td class="text-right pr-3">500</td><td class="text-right">41.7%</td></tr>
-              <tr class="border-b"><td class="py-2 pr-3">PCS 及电池舱</td><td class="text-right pr-3">12,000</td><td class="text-right pr-3">100</td><td class="text-right">8.3%</td></tr>
-              <tr class="border-b"><td class="py-2 pr-3">升压站、GIS 及土建（EPC）</td><td class="text-right pr-3">42,000</td><td class="text-right pr-3">350</td><td class="text-right">29.2%</td></tr>
-              <tr class="border-b"><td class="py-2 pr-3">土地征用及清理</td><td class="text-right pr-3">6,380</td><td class="text-right pr-3">53.2</td><td class="text-right">4.4%</td></tr>
-              <tr class="border-b"><td class="py-2 pr-3">工程建设其他费用</td><td class="text-right pr-3">14,820</td><td class="text-right pr-3">123.5</td><td class="text-right">10.3%</td></tr>
-              <tr class="border-b"><td class="py-2 pr-3">基本预备费</td><td class="text-right pr-3">7,792</td><td class="text-right pr-3">64.9</td><td class="text-right">5.4%</td></tr>
-              <tr class="border-b"><td class="py-2 pr-3">建设期利息</td><td class="text-right pr-3">1,008</td><td class="text-right pr-3">8.4</td><td class="text-right">0.7%</td></tr>
-              <tr class="font-semibold bg-emerald-50"><td class="py-2 pr-3">项目建设总投资</td><td class="text-right pr-3">144,000</td><td class="text-right pr-3">1,200</td><td class="text-right">100%</td></tr>
-            </tbody>
+            <tbody class="num" id="ivBody"></tbody>
           </table>
         </div>
+        <p class="text-[11px] text-slate-400 mt-3">说明：各分项按基准结构（电池 41.67%、PCS 8.33%、EPC 29.17%、土地 4.43%、其他 10.29%、预备费 5.41%、建设期利息 0.70%）随总投资同比例缩放。</p>
       </div>
       <div class="card p-6 lg:col-span-2">
         <h3 class="font-semibold text-slate-900 mb-4">投资构成占比</h3>
@@ -197,88 +198,28 @@
     <!-- 三情景收益对比 -->
     <div class="mt-8 grid lg:grid-cols-5 gap-5">
       <div class="card p-6 lg:col-span-2">
-        <h3 class="font-semibold text-slate-900 mb-4">三情景年度收益对比（万元）</h3>
+        <div class="flex items-center justify-between mb-1">
+          <h3 class="font-semibold text-slate-900">三情景年度收益对比</h3>
+          <span class="text-xs text-slate-500">单位：万元</span>
+        </div>
+        <p class="text-[11px] text-slate-500 mb-3">同一系统参数下，市场参数取保守 / 中性 / 乐观三种组合</p>
         <canvas id="scenarioChart" height="260"></canvas>
       </div>
       <div class="card p-6 lg:col-span-3">
-        <h3 class="font-semibold text-slate-900 mb-4">五大收益来源 · 中性情景</h3>
-        <div class="space-y-3 text-sm">
-          <div>
-            <div class="flex justify-between mb-1"><span class="font-medium">现货价差套利</span><span class="num font-semibold">11,200 万元 · 59%</span></div>
-            <div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-emerald-600" style="width:59%"></div></div>
-            <p class="text-xs text-slate-500 mt-1">放电 877,200 kWh/日 × 价差 0.50 元/kWh × 330 天</p>
-          </div>
-          <div>
-            <div class="flex justify-between mb-1"><span class="font-medium">容量补偿</span><span class="num font-semibold">4,613 万元 · 24%</span></div>
-            <div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-amber-500" style="width:24%"></div></div>
-            <p class="text-xs text-slate-500 mt-1">有效容量 268,830 kW × 165 元 × 供需系数 1.04</p>
-          </div>
-          <div>
-            <div class="flex justify-between mb-1"><span class="font-medium">容量租赁</span><span class="num font-semibold">2,400 万元 · 13%</span></div>
-            <div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sky-500" style="width:13%"></div></div>
-            <p class="text-xs text-slate-500 mt-1">200 元/kW·年 × 出租率 70%</p>
-          </div>
-          <div>
-            <div class="flex justify-between mb-1"><span class="font-medium">辅助服务</span><span class="num font-semibold">400 万元 · 2%</span></div>
-            <div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-violet-500" style="width:2%"></div></div>
-            <p class="text-xs text-slate-500 mt-1">调峰价 0.3247 元/kWh × 年调用 200 小时</p>
-          </div>
-          <div>
-            <div class="flex justify-between mb-1"><span class="font-medium">调用补偿/其他补贴</span><span class="num font-semibold">400 万元 · 2%</span></div>
-            <div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-rose-500" style="width:2%"></div></div>
-            <p class="text-xs text-slate-500 mt-1">现货二次优化运行成本补偿</p>
-          </div>
-          <div class="flex justify-between border-t pt-3 mt-3">
-            <span class="font-semibold">年总收入合计</span>
-            <span class="num font-bold text-emerald-700 text-lg">19,013 万元</span>
-          </div>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-semibold text-slate-900">五大收益来源 · <span id="returnsTitle">当前参数</span></h3>
+          <span class="chip tag-info">实时</span>
         </div>
+        <div class="space-y-3 text-sm" id="returnsList"></div>
       </div>
     </div>
 
     <!-- 三情景核心指标 -->
     <div class="mt-8">
-      <div class="divider-label">三情景核心财务指标（20 年运营期）</div>
-      <div class="grid md:grid-cols-3 gap-5">
-        <div class="card p-6 border-t-4 border-rose-400">
-          <div class="flex items-center justify-between">
-            <h4 class="font-semibold">保守情景</h4><span class="chip tag-bad">不建议投资</span>
-          </div>
-          <dl class="mt-4 text-sm space-y-2 num">
-            <div class="flex justify-between"><dt class="text-slate-500">年总收入</dt><dd class="font-semibold">14,513 万元</dd></div>
-            <div class="flex justify-between"><dt class="text-slate-500">年 EBITDA</dt><dd class="font-semibold">11,666 万元</dd></div>
-            <div class="flex justify-between"><dt class="text-slate-500">IRR</dt><dd class="font-semibold text-rose-600">−3.16%</dd></div>
-            <div class="flex justify-between"><dt class="text-slate-500">NPV(8%)</dt><dd class="font-semibold text-rose-600">−8.76 亿元</dd></div>
-            <div class="flex justify-between"><dt class="text-slate-500">静态回收期</dt><dd class="font-semibold">&gt; 20 年</dd></div>
-          </dl>
-        </div>
-        <div class="card p-6 border-t-4 border-amber-400">
-          <div class="flex items-center justify-between">
-            <h4 class="font-semibold">中性情景</h4><span class="chip tag-warn">经济性不足</span>
-          </div>
-          <dl class="mt-4 text-sm space-y-2 num">
-            <div class="flex justify-between"><dt class="text-slate-500">年总收入</dt><dd class="font-semibold">19,013 万元</dd></div>
-            <div class="flex justify-between"><dt class="text-slate-500">年 EBITDA</dt><dd class="font-semibold">16,166 万元</dd></div>
-            <div class="flex justify-between"><dt class="text-slate-500">IRR</dt><dd class="font-semibold text-amber-600">2.31%</dd></div>
-            <div class="flex justify-between"><dt class="text-slate-500">NPV(8%)</dt><dd class="font-semibold text-amber-600">−5.00 亿元</dd></div>
-            <div class="flex justify-between"><dt class="text-slate-500">静态回收期</dt><dd class="font-semibold">17.08 年</dd></div>
-          </dl>
-        </div>
-        <div class="card p-6 border-t-4 border-emerald-500">
-          <div class="flex items-center justify-between">
-            <h4 class="font-semibold">乐观情景</h4><span class="chip tag-good">审慎可行</span>
-          </div>
-          <dl class="mt-4 text-sm space-y-2 num">
-            <div class="flex justify-between"><dt class="text-slate-500">年总收入</dt><dd class="font-semibold">24,113 万元</dd></div>
-            <div class="flex justify-between"><dt class="text-slate-500">年 EBITDA</dt><dd class="font-semibold">21,266 万元</dd></div>
-            <div class="flex justify-between"><dt class="text-slate-500">IRR</dt><dd class="font-semibold text-emerald-700">7.02%</dd></div>
-            <div class="flex justify-between"><dt class="text-slate-500">NPV(8%)</dt><dd class="font-semibold text-emerald-700">−0.93 亿元</dd></div>
-            <div class="flex justify-between"><dt class="text-slate-500">静态回收期</dt><dd class="font-semibold">8.78 年</dd></div>
-          </dl>
-        </div>
-      </div>
+      <div class="divider-label">三情景核心财务指标（运营期 <span id="sc_life" class="num">20</span> 年）</div>
+      <div class="grid md:grid-cols-3 gap-5" id="scenarioCards"></div>
       <p class="text-xs text-slate-500 mt-4">
-        说明：已考虑"三免三减半"税收优惠、前 3 年产能爬坡（80%/90%/100%）、第 12 年电池更换（6 亿元）等因素；折现率 8%。
+        说明：保守 / 中性 / 乐观三情景在<strong>当前系统参数</strong>基础上，分别采用市场参数组合：价差 0.40 / 0.50 / 0.57 元/kWh、租赁 100 / 200 / 300 元/kW·年、出租率 40% / 70% / 90%、辅助 100 / 200 / 300 小时、补贴 300 / 400 / 500 万元。已考虑"三免三减半"税优、前 3 年产能爬坡、第 12 年电池更换；折现率 8%。
       </p>
     </div>
   </div>
@@ -787,37 +728,67 @@
 </footer>
 
 <script>
-/* ========== 图表：投资构成 ========== */
-new Chart(document.getElementById('investChart'), {
+/* ========== 投资构成基准结构（占总投资百分比） ========== */
+const INVEST_STRUCT = [
+  {name:'储能电池系统',           pct:60000/144000, color:'#0b6e4f'},
+  {name:'PCS 及电池舱',            pct:12000/144000, color:'#13a474'},
+  {name:'升压站、GIS 及土建（EPC）', pct:42000/144000, color:'#f5b301'},
+  {name:'土地征用及清理',           pct: 6380/144000, color:'#fb923c'},
+  {name:'工程建设其他费用',         pct:14820/144000, color:'#38bdf8'},
+  {name:'基本预备费',              pct: 7792/144000, color:'#a78bfa'},
+  {name:'建设期利息',              pct: 1008/144000, color:'#f87171'},
+];
+
+/* ========== 图表：投资构成（动态） ========== */
+const investChart = new Chart(document.getElementById('investChart'), {
   type:'doughnut',
   data:{
-    labels:['储能电池系统','PCS及电池舱','升压站/GIS/土建','土地征用','工程建设其他','基本预备费','建设期利息'],
+    labels: INVEST_STRUCT.map(x=>x.name),
     datasets:[{
-      data:[60000,12000,42000,6380,14820,7792,1008],
-      backgroundColor:['#0b6e4f','#13a474','#f5b301','#fb923c','#38bdf8','#a78bfa','#f87171'],
+      data: INVEST_STRUCT.map(x=>x.pct*144000),
+      backgroundColor: INVEST_STRUCT.map(x=>x.color),
       borderWidth:0
     }]
   },
-  options:{plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}}},cutout:'60%'}
+  options:{
+    plugins:{
+      legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},
+      tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed.toLocaleString()} 万元`}}
+    },
+    cutout:'60%'
+  }
 });
 
-/* ========== 图表：情景对比 ========== */
-new Chart(document.getElementById('scenarioChart'), {
+/* ========== 图表：情景对比（动态） ========== */
+const scenarioChart = new Chart(document.getElementById('scenarioChart'), {
   type:'bar',
   data:{
-    labels:['现货套利','容量补偿','容量租赁','辅助服务','调用补偿'],
+    labels:['现货套利','容量补偿','容量租赁','辅助服务','其他补贴'],
     datasets:[
-      {label:'保守', data:[8200,4613,1200,200,300], backgroundColor:'#fca5a5'},
-      {label:'中性', data:[11200,4613,2400,400,400], backgroundColor:'#fbbf24'},
-      {label:'乐观', data:[14200,4613,4200,600,500], backgroundColor:'#10b981'},
+      {label:'保守', data:[0,0,0,0,0], backgroundColor:'#fca5a5'},
+      {label:'中性', data:[0,0,0,0,0], backgroundColor:'#fbbf24'},
+      {label:'乐观', data:[0,0,0,0,0], backgroundColor:'#10b981'},
     ]
   },
   options:{
     responsive:true,
     scales:{y:{beginAtZero:true,ticks:{callback:v=>v.toLocaleString()}}},
-    plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}}}
+    plugins:{
+      legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},
+      tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}：${ctx.parsed.y.toLocaleString()} 万元`}}
+    }
   }
 });
+
+/* ========== 三情景市场参数预设 ========== */
+const SCENARIOS = {
+  conservative:{key:'conservative', label:'保守', color:'rose',    border:'border-rose-400',    badge:'tag-bad',  badgeText:'高风险',
+    market:{spread:0.40, leasePrice:100, leaseRate:40, asHours:100, subsidy:300}},
+  neutral:     {key:'neutral',      label:'中性', color:'amber',   border:'border-amber-400',   badge:'tag-warn', badgeText:'基准',
+    market:{spread:0.50, leasePrice:200, leaseRate:70, asHours:200, subsidy:400}},
+  optimistic:  {key:'optimistic',   label:'乐观', color:'emerald', border:'border-emerald-500', badge:'tag-good', badgeText:'乐观',
+    market:{spread:0.57, leasePrice:300, leaseRate:90, asHours:300, subsidy:500}},
+};
 
 /* ========== 测算器 ========== */
 // 同步 number & range
@@ -1050,6 +1021,124 @@ function calc(){
   const beBadge = document.getElementById('beBadge');
   if(ir>=0.08){ beBadge.className='chip tag-good'; beBadge.textContent='项目已达盈亏平衡'; }
   else { beBadge.className='chip tag-warn'; beBadge.textContent='未达盈亏平衡 · 目标 IRR 8%'; }
+
+  // === 投资构成（动态） ===
+  renderInvestment(inp, rev.totalCapexWan);
+  // === 五大收益来源（当前参数） ===
+  renderReturnsList(inp, rev);
+  // === 三情景对比（基于当前系统参数） ===
+  renderScenarios(inp);
+  document.getElementById('sc_life').textContent = inp.life;
+}
+
+/* ========== 渲染：投资构成 ========== */
+function renderInvestment(inp, totalCapexWan){
+  const energykWh = inp.power * inp.duration * 1000;
+  document.getElementById('iv_total_yi').textContent = (totalCapexWan/10000).toFixed(2);
+  document.getElementById('iv_unit_price').textContent = fmt(inp.capex);
+  document.getElementById('iv_capacity').textContent = fmt(inp.power*inp.duration);
+  const tbody = document.getElementById('ivBody');
+  let html = '';
+  INVEST_STRUCT.forEach(item=>{
+    const wan = totalCapexWan * item.pct;
+    const yuanPerKWh = wan*10000 / energykWh;
+    html += `<tr class="border-b"><td class="py-2 pr-3">${item.name}</td>`+
+            `<td class="text-right pr-3">${fmt(wan)}</td>`+
+            `<td class="text-right pr-3">${yuanPerKWh.toFixed(yuanPerKWh<10?2:1)}</td>`+
+            `<td class="text-right">${(item.pct*100).toFixed(1)}%</td></tr>`;
+  });
+  html += `<tr class="font-semibold bg-emerald-50"><td class="py-2 pr-3">项目建设总投资</td>`+
+          `<td class="text-right pr-3">${fmt(totalCapexWan)}</td>`+
+          `<td class="text-right pr-3">${fmt(inp.capex)}</td>`+
+          `<td class="text-right">100%</td></tr>`;
+  tbody.innerHTML = html;
+  investChart.data.datasets[0].data = INVEST_STRUCT.map(x=>totalCapexWan*x.pct);
+  investChart.update();
+}
+
+/* ========== 渲染：五大收益来源 ========== */
+function renderReturnsList(inp, rev){
+  const items = [
+    {name:'现货价差套利', val:rev.spot,  color:'bg-emerald-600',
+      desc:`放电 ${fmt(rev.annualDischargeMWh*1000/inp.days,0)} kWh/日 × 价差 ${inp.spread.toFixed(2)} 元/kWh × ${inp.days} 天 × 市场化 ${inp.spotRatio}%`},
+    {name:'容量电价补偿', val:rev.cap,   color:'bg-amber-500',
+      desc:`有效容量 ${fmt(rev.effectiveKW)} kW × ${inp.capPrice} 元/kW·年 × 供需系数 ${inp.capCoef.toFixed(2)}`},
+    {name:'容量租赁',     val:rev.lease, color:'bg-sky-500',
+      desc:`${inp.leasePrice} 元/kW·年 × 出租率 ${inp.leaseRate}%`},
+    {name:'辅助服务',     val:rev.as,    color:'bg-violet-500',
+      desc:`调峰价 ${inp.asPrice.toFixed(4)} 元/kWh × 装机 ${inp.power} MW × ${inp.asHours} 小时`},
+    {name:'其他补贴/调用补偿', val:rev.other, color:'bg-rose-500',
+      desc:`现货二次优化运行成本补偿等`},
+  ];
+  const total = rev.total || 1;
+  let html = '';
+  items.forEach(it=>{
+    const pct = (it.val/total*100);
+    html += `<div>
+      <div class="flex justify-between mb-1"><span class="font-medium">${it.name}</span>
+        <span class="num font-semibold">${fmt(it.val)} 万元 · ${pct.toFixed(1)}%</span></div>
+      <div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full ${it.color}" style="width:${Math.max(0,Math.min(100,pct))}%"></div></div>
+      <p class="text-xs text-slate-500 mt-1">${it.desc}</p>
+    </div>`;
+  });
+  html += `<div class="flex justify-between border-t pt-3 mt-3">
+    <span class="font-semibold">年总收入合计</span>
+    <span class="num font-bold text-emerald-700 text-lg">${fmt(rev.total)} 万元</span>
+  </div>`;
+  document.getElementById('returnsList').innerHTML = html;
+}
+
+/* ========== 渲染：三情景 ========== */
+function computeScenario(inp, marketOverride){
+  const sInp = {...inp, ...marketOverride};
+  const rev = computeRevenues(sInp);
+  sInp.totalCapexWan = rev.totalCapexWan;
+  const cost = computeCosts(sInp, rev.totalCapexWan);
+  const profit = computeProfit(rev.total, cost);
+  const cfs = projectCashflow(sInp, rev.total, cost);
+  const np = npv(cfs, 0.08);
+  const ir = irr(cfs);
+  const pb = payback(cfs);
+  return {rev, cost, profit, np, ir, pb, sInp};
+}
+function renderScenarios(inp){
+  const results = {};
+  ['conservative','neutral','optimistic'].forEach(k=>{
+    results[k] = computeScenario(inp, SCENARIOS[k].market);
+  });
+  // 柱状图
+  const ds = scenarioChart.data.datasets;
+  ds[0].data = ['spot','cap','lease','as','other'].map(k=>results.conservative.rev[k]);
+  ds[1].data = ['spot','cap','lease','as','other'].map(k=>results.neutral.rev[k]);
+  ds[2].data = ['spot','cap','lease','as','other'].map(k=>results.optimistic.rev[k]);
+  scenarioChart.update();
+  // 卡片
+  const cardsEl = document.getElementById('scenarioCards');
+  let html = '';
+  ['conservative','neutral','optimistic'].forEach(k=>{
+    const meta = SCENARIOS[k];
+    const r = results[k];
+    let badge, badgeText, irrColor;
+    if(r.ir>=0.08){ badge='tag-good'; badgeText='达标 ≥8%'; irrColor='text-emerald-700'; }
+    else if(r.ir>=0.05){ badge='tag-warn'; badgeText='接近基准'; irrColor='text-amber-600'; }
+    else if(r.ir>0){ badge='tag-warn'; badgeText='经济性不足'; irrColor='text-amber-600'; }
+    else { badge='tag-bad'; badgeText='不建议投资'; irrColor='text-rose-600'; }
+    const npvSign = r.np>=0 ? '+' : '−';
+    const pbStr = isFinite(r.pb) ? r.pb.toFixed(1)+' 年' : '> '+inp.life+' 年';
+    html += `<div class="card p-6 border-t-4 ${meta.border}">
+      <div class="flex items-center justify-between">
+        <h4 class="font-semibold">${meta.label}情景</h4><span class="chip ${badge}">${badgeText}</span>
+      </div>
+      <dl class="mt-4 text-sm space-y-2 num">
+        <div class="flex justify-between"><dt class="text-slate-500">年总收入</dt><dd class="font-semibold">${fmt(r.rev.total)} 万元</dd></div>
+        <div class="flex justify-between"><dt class="text-slate-500">年 EBITDA</dt><dd class="font-semibold">${fmt(r.profit.ebitda)} 万元</dd></div>
+        <div class="flex justify-between"><dt class="text-slate-500">IRR</dt><dd class="font-semibold ${irrColor}">${isFinite(r.ir)?(r.ir*100).toFixed(2)+'%':'—'}</dd></div>
+        <div class="flex justify-between"><dt class="text-slate-500">NPV(8%)</dt><dd class="font-semibold ${irrColor}">${npvSign}${Math.abs(r.np/10000).toFixed(2)} 亿元</dd></div>
+        <div class="flex justify-between"><dt class="text-slate-500">静态回收期</dt><dd class="font-semibold">${pbStr}</dd></div>
+      </dl>
+    </div>`;
+  });
+  cardsEl.innerHTML = html;
 }
 
 // 反求：固定其他参数，求 NPV=0 时的年收入
