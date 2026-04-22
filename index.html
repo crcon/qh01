@@ -100,7 +100,7 @@
       青海省海西 300MW/1200MWh<br />独立储能电站 · 投资与收益分析
     </h1>
     <p class="mt-5 max-w-2xl text-white/80 md:text-lg">
-      依据《青海发电侧容量电价机制（征求意见稿）》《青海电力现货市场规则 V6.0》《西北监能市场〔2025〕48号》等最新政策，
+      依据《青海省发电侧可靠容量补偿机制（征求意见稿）》（2026-04-21）、《青海电力现货市场规则 V6.0》、《西北监能市场〔2025〕48号》等最新政策，
       构建现货套利、容量补偿、容量租赁、辅助服务、调用补偿五位一体的收益测算模型。
     </p>
     <div class="mt-6 flex items-center gap-2 text-xs text-white/75">
@@ -378,20 +378,26 @@
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <div class="param-row"><label class="text-sm">补偿标准 <span class="text-slate-400 text-xs">元/kW·年</span></label>
-                  <input type="number" id="capPrice" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="0" max="400" step="1" value="165"></div>
-                <input type="range" id="capPriceR" min="0" max="400" step="1" value="165" class="w-full mt-1">
+                  <input type="number" id="capPrice" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="0" max="400" step="1" value="185"></div>
+                <input type="range" id="capPriceR" min="0" max="400" step="1" value="185" class="w-full mt-1">
               </div>
               <div>
                 <div class="param-row"><label class="text-sm">供需系数</label>
-                  <input type="number" id="capCoef" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="0.8" max="1.2" step="0.01" value="1.04"></div>
-                <input type="range" id="capCoefR" min="0.8" max="1.2" step="0.01" value="1.04" class="w-full mt-1">
+                  <input type="number" id="capCoef" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="0.8" max="1.2" step="0.01" value="0.92"></div>
+                <input type="range" id="capCoefR" min="0.8" max="1.2" step="0.01" value="0.92" class="w-full mt-1">
               </div>
             </div>
             <div>
-              <div class="param-row"><label class="text-sm">可靠容量系数 <span class="text-slate-400 text-xs">%</span></label>
-                <input type="number" id="relCoef" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="0" max="100" step="1" value="100"></div>
-              <input type="range" id="relCoefR" min="0" max="100" step="1" value="100" class="w-full mt-1">
-              <p class="text-[11px] text-slate-500 mt-1">= MIN( 放电时长 / 净负荷高峰时长, 100% )，净负荷高峰默认 4 小时。</p>
+              <div class="param-row"><label class="text-sm">系统净负荷高峰时长 <span class="text-slate-400 text-xs">h</span></label>
+                <input type="number" id="peakHours" class="w-24 text-right border rounded-md px-2 py-1 text-sm num" min="1" max="12" step="1" value="8"></div>
+              <input type="range" id="peakHoursR" min="1" max="12" step="1" value="8" class="w-full mt-1">
+              <p class="text-[11px] text-slate-500 mt-1">2026 版征求意见稿由 4h 调整为 <b>8h</b>，4 小时储能等效补偿单价将大幅下降。</p>
+            </div>
+            <div>
+              <div class="param-row"><label class="text-sm">可靠容量系数 <span class="text-slate-400 text-xs">%（自动）</span></label>
+                <input type="number" id="relCoef" class="w-24 text-right border rounded-md px-2 py-1 text-sm num bg-slate-50" min="0" max="100" step="0.1" value="50"></div>
+              <input type="range" id="relCoefR" min="0" max="100" step="0.1" value="50" class="w-full mt-1">
+              <p class="text-[11px] text-slate-500 mt-1">= MIN( 放电时长 / 系统净负荷高峰时长, 100% )，由放电时长与高峰时长自动联动，也可手动覆盖。</p>
             </div>
           </div>
         </details>
@@ -649,12 +655,14 @@
         <div class="flex items-start gap-3">
           <div class="w-10 h-10 rounded-lg bg-amber-500 text-white flex items-center justify-center font-bold">②</div>
           <div>
-            <h4 class="font-semibold">发电侧容量电价</h4>
-            <p class="text-sm text-slate-600 mt-1">《关于建立青海省发电侧容量电价机制的通知（征求意见稿）》（2025-10）</p>
+            <h4 class="font-semibold">发电侧可靠容量补偿</h4>
+            <p class="text-sm text-slate-600 mt-1">《青海省发电侧可靠容量补偿机制（征求意见稿）》（2026-04-21）</p>
             <ul class="text-xs text-slate-500 mt-2 space-y-1 list-disc pl-4">
-              <li>2026 年补偿标准 165 元/kW·年、供需系数 1.04</li>
-              <li>有效容量 = 放电功率 ×(1−厂用电率)× 可靠容量系数</li>
-              <li>可靠容量系数 = MIN( 放电时长 / 净负荷高峰时长, 100% )</li>
+              <li>2026 年补偿标准 <b>185</b> 元/kW·年、供需系数 <b>0.92</b></li>
+              <li>容量电费 = 申报容量 × 供需系数 × 补偿标准</li>
+              <li>可靠容量 = 放电功率 ×(1−厂用电率 10.39%)× 可靠容量系数</li>
+              <li>可靠容量系数 = MIN( 放电时长 / 系统净负荷高峰时长, 100% )，高峰时长 <b>8h</b>（原 4h）</li>
+              <li>4h 储能折算单价仅约 82.89 元/kW·年 → 政策导向长时储能</li>
             </ul>
           </div>
         </div>
@@ -741,8 +749,7 @@
     <div>
       <div class="text-white font-semibold mb-2">联系我们</div>
       <ul class="text-xs space-y-1">
-        <li>项目合作：bd@yichu-energy.com</li>
-        <li>技术咨询：tech@yichu-energy.com</li>
+        <li>项目合作 / 技术咨询：陈先生 13980081510</li>
         <li>地址：青海省西宁市</li>
       </ul>
     </div>
@@ -817,16 +824,27 @@ const SCENARIOS = {
 // 同步 number & range
 const pairs = [
   'power','duration','capex','rte','avail','cycles','days','aux','equity','rate','life',
-  'spread','spotRatio','capPrice','capCoef','relCoef',
+  'spread','spotRatio','capPrice','capCoef','relCoef','peakHours',
   'leasePrice','leaseRate','asPrice','asHours','subsidy',
   'omRate','stationE','staff','salary','insRate','other'
 ];
 pairs.forEach(id=>{
   const n=document.getElementById(id), r=document.getElementById(id+'R');
   if(!n||!r) return;
-  n.addEventListener('input',()=>{r.value=n.value;calc();});
-  r.addEventListener('input',()=>{n.value=r.value;calc();});
+  n.addEventListener('input',()=>{r.value=n.value;syncRelCoef(id);calc();});
+  r.addEventListener('input',()=>{n.value=r.value;syncRelCoef(id);calc();});
 });
+// 可靠容量系数 = MIN( 放电时长 / 系统净负荷高峰时长, 100% ) —— 由 duration/peakHours 自动联动
+function syncRelCoef(changedId){
+  if(changedId!=='duration' && changedId!=='peakHours') return;
+  const dur = parseFloat(document.getElementById('duration').value)||0;
+  const ph  = parseFloat(document.getElementById('peakHours').value)||1;
+  const rc  = Math.min(dur/ph, 1) * 100;
+  const rcVal = Math.round(rc*10)/10;
+  const n=document.getElementById('relCoef'), r=document.getElementById('relCoefR');
+  if(n) n.value = rcVal;
+  if(r) r.value = rcVal;
+}
 
 // 预设
 const presets={
@@ -836,7 +854,7 @@ const presets={
 };
 const baseDefaults={
   power:300,duration:4,capex:1200,rte:86,avail:85,cycles:1,days:330,aux:10.39,
-  equity:30,rate:3.5,life:20,spread:0.5,spotRatio:100,capPrice:165,capCoef:1.04,relCoef:100,
+  equity:30,rate:3.5,life:20,spread:0.5,spotRatio:100,capPrice:185,capCoef:0.92,relCoef:50,peakHours:8,
   leasePrice:200,leaseRate:70,asPrice:0.3247,asHours:200,subsidy:400,
   omRate:0.8,stationE:0.3,staff:25,salary:15,insRate:0.2,other:600
 };
@@ -1101,7 +1119,7 @@ function renderReturnsList(inp, rev){
     {name:'现货价差套利', val:rev.spot,  color:'bg-emerald-600',
       desc:`放电 ${fmt(rev.annualDischargeMWh*1000/inp.days,0)} kWh/日 × 价差 ${inp.spread.toFixed(2)} 元/kWh × ${inp.days} 天 × 市场化 ${inp.spotRatio}%`},
     {name:'容量电价补偿', val:rev.cap,   color:'bg-amber-500',
-      desc:`有效容量 ${fmt(rev.effectiveKW)} kW × ${inp.capPrice} 元/kW·年 × 供需系数 ${inp.capCoef.toFixed(2)}`},
+      desc:`可靠容量系数 MIN(${inp.duration}h / ${inp.peakHours}h, 100%) = ${inp.relCoef.toFixed(1)}%；有效容量 ${fmt(rev.effectiveKW)} kW × ${inp.capPrice} 元/kW·年 × 供需系数 ${inp.capCoef.toFixed(2)}`},
     {name:'容量租赁',     val:rev.lease, color:'bg-sky-500',
       desc:`${inp.leasePrice} 元/kW·年 × 出租率 ${inp.leaseRate}%`},
     {name:'辅助服务',     val:rev.as,    color:'bg-violet-500',
